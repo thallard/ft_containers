@@ -6,7 +6,7 @@
 /*   By: thallard <thallard@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/18 16:20:43 by thallard          #+#    #+#             */
-/*   Updated: 2021/04/18 23:02:41 by thallard         ###   ########lyon.fr   */
+/*   Updated: 2021/04/18 23:10:35 by thallard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,14 @@ public:
     typedef Alloc::const_reference &const_reference;
     typedef Alloc::pointer pointer;
     typedef Alloc::const_pointer const_pointer;
+    
     List() { allocator_type = allocator_type(); }
     List(size_t size, const value_type &val = value_type(),
          const allocator_type &alloc = allocator_type());
     List();
     ~List();
+    
+    List<T, Alloc> &operator=(List const & ref) { }
 };
 
 } // namespace ft
