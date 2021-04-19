@@ -2,7 +2,7 @@ NAME = ft_containers
 
 CC = clang++
 
-FLAGS = -Werror -Wextra -Wall -Wconversion -g3 -fsanitize=address
+FLAGS = -Werror -Wextra -Wall -Wconversion -std=c++98 -g3
 
 CCF = $(CC) $(FLAGS)
 

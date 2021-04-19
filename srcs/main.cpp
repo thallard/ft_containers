@@ -4,14 +4,13 @@
 int main()
 {
 	ft::List<int> newList(4, 100);
-	
-	ft::Element<int> *node = newList.getNode();
+	std::cout << "Iterator: " << std::endl;
 
-	for (unsigned int i = 0; i < 6; i++)
-	{
-		std::cout << node->_content << std::endl;
-		node = node->_next;
-	}
+	ft::List<int>::iterator itend = newList.end();
+
+	for (ft::List<int>::iterator it = newList.begin(); it != itend; it++)
+		std::cout << *it << std::endl;
+
 	std::cout << newList.front() << " " << newList.back() << std::endl;
 	std::list<int> realList(4, 100);
 	std::cout << *(--realList.begin()) << std::endl;
@@ -23,4 +22,5 @@ int main()
 		oui++;
 	}
 	std::cout << *realList.end() << std::endl;
+
 }
