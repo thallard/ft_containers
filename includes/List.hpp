@@ -530,6 +530,28 @@ namespace ft
 			_nodes->_content = static_cast<T>(count);
 			_size = count;
 		}
+		else
+		{
+			Element<T> *tmp = _nodes;
+			size_t i;
+			for (i = 0; i < count; i++)
+				tmp = tmp->_next;
+			Element<T> *last = tmp;
+			tmp = tmp->_next;
+			for (size_t j = ++i; j < _size; j++)
+			{
+				tmp = tmp->_next;
+				this->deallocate(reinterpret_cast<int *>(tmp->_prev), sizeof(Element<T> *));
+			}
+			Element<T> *end = tmp->_next;
+			this->deallocate(reinterpret_cast<int *>(tmp), sizeof(Element<T> *));
+			last->_next = reinterpret_cast<Element<T> *>(this->allocate(sizeof(Element<T> *)));
+			last->_next = end;
+			end->_prev = last;
+			end->_content = static_cast<T>(count);
+			_nodes->_content = static_cast<T>(count);
+			_size = count;
+		}
 	}
 
 	//Iterators
