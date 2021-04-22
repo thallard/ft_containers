@@ -44,43 +44,43 @@ namespace ft
 		typedef T *pointer;
 		typedef std::forward_iterator_tag iterator_category;
 		typedef int difference_type;
-		Iterator(pointer ptr) : ptr_(ptr){};
+		Iterator(pointer ptr) : _ptr(ptr){};
 		Iterator &operator=(Iterator const &ref)
 		{
-			ptr_ = ref.ptr_;
+			_ptr = ref._ptr;
 			return (*this);
 		};
 		self_type operator++()
 		{
-			ptr_ = ptr_->_next;
+			_ptr = _ptr->_next;
 			return *this;
 		}
 		self_type operator++(int n)
 		{
 			(void)n;
 			self_type i = *this;
-			ptr_ = ptr_->_next;
+			_ptr = _ptr->_next;
 			return i;
 		}
 		self_type operator--()
 		{
-			ptr_ = ptr_->_prev;
+			_ptr = _ptr->_prev;
 			return *this;
 		}
 		self_type operator--(int n)
 		{
 			(void)n;
 			self_type i = *this;
-			ptr_ = ptr_->_prev;
+			_ptr = _ptr->_prev;
 			return i;
 		}
-		reference operator*() { return *ptr_; }
-		pointer operator->() { return ptr_; }
-		bool operator==(const self_type &rhs) { return ptr_ == rhs.ptr_; }
-		bool operator!=(const self_type &rhs) { return ptr_ != rhs.ptr_; }
+		reference operator*() { return *_ptr; }
+		pointer operator->() { return _ptr; }
+		bool operator==(const self_type &rhs) { return _ptr == rhs._ptr; }
+		bool operator!=(const self_type &rhs) { return _ptr != rhs._ptr; }
 
 	private:
-		pointer ptr_;
+		pointer _ptr;
 	};
 
 	template <typename T>
@@ -93,43 +93,43 @@ namespace ft
 		typedef T *pointer;
 		typedef std::forward_iterator_tag iterator_category;
 		typedef int difference_type;
-		Const_Iterator(pointer ptr) : ptr_(ptr){};
+		Const_Iterator(pointer ptr) : _ptr(ptr){};
 		Const_Iterator &operator=(Const_Iterator const &ref)
 		{
-			ptr_ = ref._ptr;
+			_ptr = ref._ptr;
 			return (*this);
 		};
 		self_type operator++()
 		{
-			ptr_ = ptr_->_next;
+			_ptr = _ptr->_next;
 			return *this;
 		}
 		self_type operator++(int n)
 		{
 			(void)n;
 			self_type i = *this;
-			ptr_ = ptr_->_next;
+			_ptr = _ptr->_next;
 			return i;
 		}
 		self_type operator--()
 		{
-			ptr_ = ptr_->_prev;
+			_ptr = _ptr->_prev;
 			return *this;
 		}
 		self_type operator--(int n)
 		{
 			(void)n;
 			self_type i = *this;
-			ptr_ = ptr_->_prev;
+			_ptr = _ptr->_prev;
 			return i;
 		}
-		reference operator*() { return *ptr_; }
-		pointer operator->() { return ptr_; }
-		bool operator==(const self_type &rhs) { return ptr_ == rhs.ptr_; }
-		bool operator!=(const self_type &rhs) { return ptr_ != rhs.ptr_; }
+		reference operator*() { return *_ptr; }
+		pointer operator->() { return _ptr; }
+		bool operator==(const self_type &rhs) { return _ptr == rhs._ptr; }
+		bool operator!=(const self_type &rhs) { return _ptr != rhs._ptr; }
 
 	private:
-		pointer ptr_;
+		pointer _ptr;
 	};
 
 	template <typename T>
@@ -142,50 +142,50 @@ namespace ft
 		typedef T *pointer;
 		typedef std::forward_iterator_tag iterator_category;
 		typedef int difference_type;
-		Reverse_Iterator(pointer ptr) : ptr_(ptr){};
+		Reverse_Iterator(pointer ptr) : _ptr(ptr){};
 		Reverse_Iterator &operator=(Reverse_Iterator const &ref)
 		{
-			ptr_ = ref._ptr;
+			_ptr = ref._ptr;
 			return (*this);
 		};
 		self_type operator++()
 		{
-			ptr_ = ptr_->_prev;
+			_ptr = _ptr->_prev;
 			return *this;
 		}
 		self_type operator++(int n)
 		{
 			(void)n;
 			self_type i = *this;
-			ptr_ = ptr_->_prev;
+			_ptr = _ptr->_prev;
 			return i;
 		}
 		self_type operator--()
 		{
-			ptr_ = ptr_->_next;
+			_ptr = _ptr->_next;
 			return *this;
 		}
 		self_type operator--(int n)
 		{
 			(void)n;
 			self_type i = *this;
-			ptr_ = ptr_->_next;
+			_ptr = _ptr->_next;
 			return i;
 		}
 		self_type operator[](int n)
 		{
 			for (int i = 0; i < n; i++)
-				ptr_ = ptr_->_prev;
-			return ptr_;
+				_ptr = _ptr->_prev;
+			return _ptr;
 		}
-		self_type base() { return ptr_->_next; };
-		reference operator*() { return *ptr_; }
-		pointer operator->() { return ptr_; }
-		bool operator==(const self_type &rhs) { return ptr_ == rhs.ptr_; }
-		bool operator!=(const self_type &rhs) { return ptr_ != rhs.ptr_; }
+		self_type base() { return _ptr->_next; };
+		reference operator*() { return *_ptr; }
+		pointer operator->() { return _ptr; }
+		bool operator==(const self_type &rhs) { return _ptr == rhs._ptr; }
+		bool operator!=(const self_type &rhs) { return _ptr != rhs._ptr; }
 
 	private:
-		pointer ptr_;
+		pointer _ptr;
 	};
 
 	template <typename T>
@@ -198,50 +198,50 @@ namespace ft
 		typedef T *pointer;
 		typedef std::forward_iterator_tag iterator_category;
 		typedef int difference_type;
-		Const_Reverse_Iterator(pointer ptr) : ptr_(ptr){};
+		Const_Reverse_Iterator(pointer ptr) : _ptr(ptr){};
 		Const_Reverse_Iterator &operator=(Const_Reverse_Iterator const &ref)
 		{
-			ptr_ = ref._ptr;
+			_ptr = ref._ptr;
 			return (*this);
 		};
 		self_type operator++()
 		{
-			ptr_ = ptr_->_prev;
+			_ptr = _ptr->_prev;
 			return *this;
 		}
 		self_type operator++(int n)
 		{
 			(void)n;
 			self_type i = *this;
-			ptr_ = ptr_->_prev;
+			_ptr = _ptr->_prev;
 			return i;
 		}
 		self_type operator--()
 		{
-			ptr_ = ptr_->_next;
+			_ptr = _ptr->_next;
 			return *this;
 		}
 		self_type operator--(int n)
 		{
 			(void)n;
 			self_type i = *this;
-			ptr_ = ptr_->_next;
+			_ptr = _ptr->_next;
 			return i;
 		}
 		self_type operator[](int n)
 		{
 			for (int i = 0; i < n; i++)
-				ptr_ = ptr_->_prev;
-			return ptr_;
+				_ptr = _ptr->_prev;
+			return _ptr;
 		}
-		self_type base() { return ptr_->_next; };
-		reference operator*() { return *ptr_; }
-		pointer operator->() { return ptr_; }
-		bool operator==(const self_type &rhs) { return ptr_ == rhs.ptr_; }
-		bool operator!=(const self_type &rhs) { return ptr_ != rhs.ptr_; }
+		self_type base() { return _ptr->_next; };
+		reference operator*() { return *_ptr; }
+		pointer operator->() { return _ptr; }
+		bool operator==(const self_type &rhs) { return _ptr == rhs._ptr; }
+		bool operator!=(const self_type &rhs) { return _ptr != rhs._ptr; }
 
 	private:
-		pointer ptr_;
+		pointer _ptr;
 	};
 
 	template <class T, class Alloc = std::allocator<T> >
@@ -519,18 +519,22 @@ namespace ft
 	}
 
 	// Members access reverse
-	template <class T, class Alloc>
-	void List<T, Alloc>::reverse()
-	{
-		/*Element<T> *first = _nodes->_next;
-		Element<T> *last = _nodes;
-		for (size_t i = 0; i < _size; i++)
-			last = last->_next;
-		for (size_t i = 0; i < _size; i++)
-		{
-			
-		}*/
-	}
+    template <class T, class Alloc>
+    void List<T, Alloc>::reverse()
+    {
+        Element<T> *tmp = _nodes;
+        Element<T> *end = _nodes->_prev;
+        Element<T> *begin = end->_prev;
+        while (tmp != end)
+        {
+            Element<T> *tmp2 = tmp;
+            tmp = tmp->_next;
+            Element<T> *tmp3 = tmp2->_prev;
+            tmp2->_prev = tmp2->_next;
+            tmp2->_next = tmp3;
+        }
+        _nodes = begin;
+    }
 
 	// Modifiers resize
 	template <class T, class Alloc>
@@ -647,28 +651,53 @@ namespace ft
 			push_front(value);
 		return (++copy);
 	}
+	
+	// Modifiers insert range
+	template <class T, class Alloc>
+	void List<T, Alloc>::insert(List<T, Alloc>::iterator pos, List<T, Alloc>::iterator first, List<T, Alloc>::iterator last)
+	{
+		(void)pos;
+		(void)first;
+		(void)last;
+	}
 
 	// Modifiers assign
 	template <class T, class Alloc>
 	void List<T, Alloc>::assign(size_type n, const value_type &val)
 	{
 		if (n > _size)
+			resize(n);
+		Element<T> *tmp = _nodes;
+		for (size_t i = 0; i < n; i++)
 		{
-			size_t save = _size;
-			this->resize(n);
-			(void)val;
-			Element<T> *tmp = _nodes->_prev->_prev;
-			for (size_t i = save; i < n; i++)
-			{
-				Element<T> *elem = reinterpret_cast<Element<T> *>(this->allocate(sizeof(Element<T> *)));
-				elem->_content = val;
-				tmp->_next = elem;
-				elem->_prev = tmp->_prev;
-				tmp = tmp->_next;
-			}
+			tmp->_content = val;
+			tmp = tmp->_next;
 		}
-			
 	}
+
+	// Modifiers assign range
+	template <class T, class Alloc>
+	void List<T, Alloc>::assign(List<T, Alloc>::iterator first, List<T, Alloc>::iterator last)
+	{
+		List<T, Alloc>::iterator copy = first;
+		List<T, Alloc>::iterator start = first;
+		size_t size = 0;
+		while (copy != last)
+		{
+			copy++;
+			size++;
+		}
+		if (size > _size)
+			resize(size);
+		Element<T> *tmp = _nodes;
+		while (start != last)
+		{
+			tmp->_content = start->_content;
+			tmp = tmp->_next;
+			start++;
+		}
+	}
+
 
 	template <class T, class Alloc>
 	void List<T, Alloc>::clear()
@@ -789,25 +818,40 @@ namespace ft
 
 		while (tmp != end)
 		{
-			Element<T> *begin = _nodes;
+			Element<T> *begin = tmp;
 			while (begin != end)
 			{
 				if (begin != tmp && begin->_content < tmp->_content)
 				{
-					Element<T> *begin_prev = begin->_prev;
-					Element<T> *tmp_next = tmp->_next;
-					Element<T> *begin_next = begin->_next;
-					Element<T> *tmp_prev = tmp->_prev;
+					Element<T> *b_prev = begin->_prev;
+					Element<T> *b_next = begin->_next;
+					Element<T> *t_prev = tmp->_prev;
+					Element<T> *t_next = tmp->_next;
 
-					begin_prev->_next = tmp;
-					tmp->_prev = begin_prev;
-					tmp->_next = begin_next;
-					begin_next->_prev = tmp;
-					tmp_prev->_next = begin;
-					begin->_prev = tmp_prev;
-					begin->_next = tmp_next;
-					tmp_next->_prev = begin;
-					begin = _nodes;
+					if (begin == tmp->_next)
+					{
+						t_prev->_next = begin;
+						begin->_prev = t_prev;
+						b_next->_prev = tmp;
+						tmp->_next = b_next;
+						begin->_next = tmp;
+						tmp->_prev = begin;
+					}
+					else
+					{
+						t_prev->_next = begin;
+						t_next->_prev  = begin;
+						begin->_prev = t_prev;
+						begin->_next = t_next;
+
+						b_prev->_next = tmp;
+						b_next->_prev = tmp;
+						tmp->_prev = b_prev;
+						tmp->_next = b_next;
+					}
+					if (tmp == _nodes)
+						_nodes = begin;
+					begin = begin->_next;
 				}
 				else
 					begin = begin->_next;

@@ -11,16 +11,16 @@ class Iterator
 		typedef T* pointer;
 		typedef std::forward_iterator_tag iterator_category;
 		typedef int difference_type;
-		Iterator(pointer ptr) : ptr_(ptr) { };
-		Iterator &operator=(Iterator const &ref) { ptr_ = ref._ptr; return (*this);};
-		self_type operator++() {self_type i = *this; ptr_++;return i; }
-		self_type operator++(int junk) {(void) junk; ++ptr_; return *this; }
-		reference operator*() { return *ptr_; }
-		pointer operator->() { return ptr_; }
-		bool operator==(const self_type& rhs) { return ptr_ == rhs.ptr_; }
-		bool operator!=(const self_type& rhs) { return ptr_ != rhs.ptr_; }
+		Iterator(pointer ptr) : _ptr(ptr) { };
+		Iterator &operator=(Iterator const &ref) { _ptr = ref._ptr; return (*this);};
+		self_type operator++() {self_type i = *this; _ptr++;return i; }
+		self_type operator++(int junk) {(void) junk; ++_ptr; return *this; }
+		reference operator*() { return *_ptr; }
+		pointer operator->() { return _ptr; }
+		bool operator==(const self_type& rhs) { return _ptr == rhs._ptr; }
+		bool operator!=(const self_type& rhs) { return _ptr != rhs._ptr; }
 	private:
-		pointer ptr_;
+		pointer _ptr;
 };
 
 #endif
