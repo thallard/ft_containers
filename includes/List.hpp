@@ -130,7 +130,6 @@ namespace ft
 
 	private:
 		pointer _ptr;
-		
 	};
 
 	template <typename T>
@@ -138,9 +137,9 @@ namespace ft
 	{
 	public:
 		typedef Reverse_Iterator self_type;
-		typedef T value_type;
-		typedef T &reference;
-		typedef T *pointer;
+		typedef Element<T> value_type;
+		typedef Element<T> &reference;
+		typedef Element<T> *pointer;
 		typedef std::forward_iterator_tag iterator_category;
 		typedef int difference_type;
 		Reverse_Iterator(pointer ptr) : _ptr(ptr){};
@@ -173,14 +172,7 @@ namespace ft
 			_ptr = _ptr->_next;
 			return i;
 		}
-		self_type operator[](int n)
-		{
-			for (int i = 0; i < n; i++)
-				_ptr = _ptr->_prev;
-			return _ptr;
-		}
-		self_type base() { return _ptr->_next; };
-		reference operator*() { return *_ptr; }
+		T operator*() { return _ptr->_content; }
 		pointer operator->() { return _ptr; }
 		bool operator==(const self_type &rhs) { return _ptr == rhs._ptr; }
 		bool operator!=(const self_type &rhs) { return _ptr != rhs._ptr; }
@@ -194,9 +186,9 @@ namespace ft
 	{
 	public:
 		typedef Const_Reverse_Iterator self_type;
-		typedef T value_type;
-		typedef T &reference;
-		typedef T *pointer;
+		typedef Element<T> value_type;
+		typedef Element<T> &reference;
+		typedef Element<T> *pointer;
 		typedef std::forward_iterator_tag iterator_category;
 		typedef int difference_type;
 		Const_Reverse_Iterator(pointer ptr) : _ptr(ptr){};
@@ -229,14 +221,7 @@ namespace ft
 			_ptr = _ptr->_next;
 			return i;
 		}
-		self_type operator[](int n)
-		{
-			for (int i = 0; i < n; i++)
-				_ptr = _ptr->_prev;
-			return _ptr;
-		}
-		self_type base() { return _ptr->_next; };
-		reference operator*() { return *_ptr; }
+		T operator*() { return _ptr->_content; }
 		pointer operator->() { return _ptr; }
 		bool operator==(const self_type &rhs) { return _ptr == rhs._ptr; }
 		bool operator!=(const self_type &rhs) { return _ptr != rhs._ptr; }
@@ -252,7 +237,7 @@ namespace ft
 		Element<T> *_nodes;
 		size_t _size;
 		size_t _count;
-
+		Alloc _alloc;
 	public:
 		typedef T value_type;
 		typedef Alloc allocator_type;
@@ -262,16 +247,17 @@ namespace ft
 		typedef value_type &const_reference;
 		typedef typename Alloc::pointer pointer;
 		typedef typename Alloc::const_pointer const_pointer;
-		typedef Iterator<T > iterator;
-		typedef Const_Iterator<T > const_iterator;
-		typedef Reverse_Iterator<T > reverse_iterator;
-		typedef Const_Reverse_Iterator<T > const_reverse_iterator;
+		typedef Iterator<T> iterator;
+		typedef Const_Iterator<T> const_iterator;
+		typedef Reverse_Iterator<T> reverse_iterator;
+		typedef Const_Reverse_Iterator<T> const_reverse_iterator;
 
 		List();
+		explicit List(const Alloc &alloc);
 		explicit List(size_type size, const T &val = value_type());
 		template <class InputIterator>
 		List(InputIterator first, InputIterator last);
-		List(const List &other);
+		List(List &other);
 		~List();
 		List<T, Alloc> &operator=(List const &ref);
 
@@ -332,16 +318,72 @@ namespace ft
 	template <class T, class Alloc>
 	List<T, Alloc>::List()
 	{
-		_nodes = reinterpret_cast<Element<T> *>(allocator_type::allocate(sizeof(Element<T> *)));
+		_nodes = reinterpret_cast<Element<T> *>(this->allocate(sizeof(Element<T> *)));
+		_nodes->_content = 0;
+		_nodes->_prev = _nodes;
+		_nodes->_next = _nodes;
 		_size = 0;
 		_count = 0;
+	}
+
+	// Allocator constructor
+		template <class T, class Alloc>
+	List<T, Alloc>::List(const Alloc &alloc)
+	{
+		_nodes = reinterpret_cast<Element<T> *>(alloc.allocate(sizeof(Element<T> *)));
+		_nodes->_content = 0;
+		_nodes->_prev = _nodes;
+		_nodes->_next = _nodes;
+		_size = 0;
+		_count = 0;
+	}
+	
+	// Fill constructor
+	template <class T, class Alloc>
+	List<T, Alloc>::List(size_t size, const T &val) : _size(size), _count(0)
+	{
+		_nodes = reinterpret_cast<Element<T> *>(this->allocate(sizeof(Element<T> *)));
+		Element<T> *tmp = _nodes;
+		for (size_t i = 0; i < _size; i++)
+		{
+			tmp->_next = reinterpret_cast<Element<T> *>(this->allocate(sizeof(Element<T> *)));
+			if (val == T())
+			tmp->_content = T();
+			else
+			tmp->_content = val;
+			tmp->_next->_prev = tmp;
+			tmp = tmp->_next;
+			_count++;
+		}
+		tmp->_content = static_cast<T>(size);
+		tmp->_next = _nodes;
+		_nodes->_prev = tmp;
 	}
 
 	// Range constructor
 	template <class T, class Alloc>
 	template <class InputIterator>
-	List<T, Alloc>::List(InputIterator first, InputIterator last) : _size(0)
+	List<T, Alloc>::List(InputIterator first, InputIterator last)
 	{
+		if (std::is_integral<InputIterator>::value)
+		{
+			_size = static_cast<size_t>(first);
+			_nodes = reinterpret_cast<Element<T> *>(this->allocate(sizeof(Element<T> *)));
+			Element<T> *tmp = _nodes;
+			for (size_t i = 0; i < _size; i++)
+			{
+				tmp->_next = reinterpret_cast<Element<T> *>(this->allocate(sizeof(Element<T> *)));
+				tmp->_content = static_cast<T>(last);
+				tmp->_next->_prev = tmp;
+				tmp = tmp->_next;
+				_count++;
+			}
+			tmp->_content = static_cast<T>(_size);
+			tmp->_next = _nodes;
+			_nodes->_prev = tmp;
+			return ;
+		}
+		_size = 0;
 		InputIterator copy = first;
 		InputIterator it = first;
 		while (copy != last)
@@ -355,33 +397,30 @@ namespace ft
 		while (it != last)
 		{
 			tmp->_next = reinterpret_cast<Element<T> *>(this->allocate(sizeof(Element<T> *)));
-			save._content = *it;
+			save._content = static_cast<T>(it);
 			tmp->_content = save._content;
 			tmp->_next->_prev = tmp;
 			tmp = tmp->_next;
 			it++;
+			_count++;
 		}
-		tmp->_content = static_cast<int>(_size);
+		tmp->_content = static_cast<T>(_size);
 		tmp->_next = _nodes;
 		_nodes->_prev = tmp;
 	}
 
-	// Fill constructor
+	// Constructor per copy
 	template <class T, class Alloc>
-	List<T, Alloc>::List(size_t size, const T &val) : _size(size)
+	List<T, Alloc>::List(List<T, Alloc> &ref)
 	{
+		_size = 0;
+		_count = ref._count;
 		_nodes = reinterpret_cast<Element<T> *>(this->allocate(sizeof(Element<T> *)));
-		Element<T> *tmp = _nodes;
-		for (unsigned int i = 0; i < size; i++)
-		{
-			tmp->_next = reinterpret_cast<Element<T> *>(this->allocate(sizeof(Element<T> *)));
-			tmp->_content = val;
-			tmp->_next->_prev = tmp;
-			tmp = tmp->_next;
-		}
-		tmp->_content = static_cast<T>(size);
-		tmp->_next = _nodes;
-		_nodes->_prev = tmp;
+		_nodes->_next = _nodes;
+		_nodes->_prev = _nodes;
+		if (ref._size > 0)
+			insert(begin(), ref.begin(), ref.end());
+		_nodes = _nodes->_next;
 	}
 
 	// Overload operator=
@@ -390,9 +429,13 @@ namespace ft
 	{
 		if (*this == ref)
 			return *this;
-		_size = ref._size;
-		_count = ref._count;
-		_nodes = ref._nodes;
+		if (_size > 0)
+			clear();
+		_nodes = reinterpret_cast<Element<T> *>(this->allocate(sizeof(Element<T> *)));
+		_nodes->_next = _nodes;
+		_nodes->_prev = _nodes;
+		insert(begin(), ref.begin(), ref.end());
+		_nodes = _nodes->_next;
 		return *this;
 	}
 
@@ -467,8 +510,7 @@ namespace ft
 	template <class T, class Alloc>
 	typename List<T, Alloc>::size_type List<T, Alloc>::max_size() const
 	{
-
-		return std::min<size_type>(allocator_type::max_size(), static_cast<size_type>(std::numeric_limits<difference_type>::max())) / sizeof(size_type);
+		return std::min<size_type>(Alloc::max_size(), static_cast<size_type>(std::numeric_limits<difference_type>::max())) / sizeof(size_type) - 1;
 	}
 
 	// Members access push_back
@@ -489,7 +531,7 @@ namespace ft
 		Element<T> *last = _nodes->_prev->_prev;
 		last->_prev->_next = last->_next;
 		last->_next->_prev = last->_prev;
-		this->deallocate(reinterpret_cast<int *>(last), sizeof(Element<T> *));
+		this->deallocate(reinterpret_cast<T *>(last), sizeof(Element<T> *));
 		_size--;
 		_count--;
 	}
@@ -501,7 +543,6 @@ namespace ft
 		resize(_size + 1);
 		Element<T> *elem = _nodes->_prev->_prev;
 		Element<T> *last = elem->_prev;
-		;
 		Element<T> *end = _nodes->_prev;
 		elem->_content = value;
 		last->_next = end;
@@ -522,7 +563,7 @@ namespace ft
 		_nodes->_prev->_next = _nodes->_next;
 		_nodes->_next->_prev = _nodes->_prev;
 		_nodes = _nodes->_next;
-		this->deallocate(reinterpret_cast<int *>(first), sizeof(Element<T> *));
+		this->deallocate(reinterpret_cast<T *>(first), sizeof(Element<T> *));
 		_size--;
 		_count--;
 	}
@@ -531,16 +572,18 @@ namespace ft
 	template <class T, class Alloc>
 	void List<T, Alloc>::reverse()
 	{
+		size_t i = 0;
 		Element<T> *tmp = _nodes;
 		Element<T> *end = _nodes->_prev;
 		Element<T> *begin = end->_prev;
-		while (tmp != end)
+		while (i != _size + 1)
 		{
 			Element<T> *tmp2 = tmp;
 			tmp = tmp->_next;
 			Element<T> *tmp3 = tmp2->_prev;
 			tmp2->_prev = tmp2->_next;
 			tmp2->_next = tmp3;
+			++i;
 		}
 		_nodes = begin;
 	}
@@ -548,7 +591,11 @@ namespace ft
 	// Modifiers resize
 	template <class T, class Alloc>
 	void List<T, Alloc>::resize(size_type count)
-	{
+	{	if (count == 1)
+			{
+				_nodes->_prev->_prev->_content = static_cast<T>(count);
+				return ;
+			}
 		if (_size < count)
 		{
 			Element<T> *tmp = _nodes;
@@ -568,6 +615,7 @@ namespace ft
 		}
 		else
 		{
+		
 			Element<T> *tmp = _nodes;
 			size_t i;
 			for (i = 1; i < count; i++)
@@ -577,10 +625,10 @@ namespace ft
 			for (size_t j = ++i; j < _size; j++)
 			{
 				tmp = tmp->_next;
-				this->deallocate(reinterpret_cast<int *>(tmp->_prev), sizeof(Element<T> *));
+				this->deallocate(reinterpret_cast<T *>(tmp->_prev), sizeof(Element<T> *));
 			}
 			Element<T> *end = tmp->_next;
-			this->deallocate(reinterpret_cast<int *>(tmp), sizeof(Element<T> *));
+			this->deallocate(reinterpret_cast<T *>(tmp), sizeof(Element<T> *));
 			last->_next = end;
 			end->_prev = last;
 			end->_content = static_cast<T>(count);
@@ -602,7 +650,7 @@ namespace ft
 		}
 		tmp->_prev->_next = tmp->_next;
 		tmp->_next->_prev = tmp->_prev;
-		this->deallocate(reinterpret_cast<int *>(tmp), sizeof(Element<T> *));
+		this->deallocate(reinterpret_cast<T *>(tmp), sizeof(Element<T> *));
 		_size--;
 		_count--;
 		return start;
@@ -624,7 +672,7 @@ namespace ft
 		while (start != last && _size-- && _count--)
 		{
 			tmp = tmp->_next;
-			this->deallocate(reinterpret_cast<int *>(tmp->_prev), sizeof(Element<T> *));
+			this->deallocate(reinterpret_cast<T *>(tmp->_prev), sizeof(Element<T> *));
 			start++;
 		}
 		save->_next = tmp;
@@ -696,7 +744,9 @@ namespace ft
 	template <class T, class Alloc>
 	void List<T, Alloc>::insert(List<T, Alloc>::iterator pos, List<T, Alloc>::iterator first, List<T, Alloc>::iterator last)
 	{
-		List<T, Alloc>::iterator start = first;
+
+			List<T, Alloc>::iterator start = static_cast<List<T, Alloc>::iterator>(first);
+		
 		size_t count = 0;
 		while (start != last)
 		{
@@ -721,8 +771,7 @@ namespace ft
 	template <class T, class Alloc>
 	void List<T, Alloc>::assign(size_type n, const value_type &val)
 	{
-		if (n > _size)
-			resize(n);
+		resize(n);
 		Element<T> *tmp = _nodes;
 		for (size_t i = 0; i < n; i++)
 		{
@@ -743,8 +792,7 @@ namespace ft
 			copy++;
 			size++;
 		}
-		if (size > _size)
-			resize(size);
+		resize(size);
 		Element<T> *tmp = _nodes;
 		while (start != last)
 		{
@@ -762,7 +810,7 @@ namespace ft
 		while (tmp != end)
 		{
 			tmp = tmp->_next;
-			this->deallocate(reinterpret_cast<int *>(tmp->_prev), sizeof(Element<T> *));
+			this->deallocate(reinterpret_cast<T *>(tmp->_prev), sizeof(Element<T> *));
 		}
 		_nodes = tmp;
 		_count = 0;
@@ -783,7 +831,7 @@ namespace ft
 				tmp->_next->_prev = tmp->_prev;
 				Element<T> *to_delete = tmp;
 				tmp = tmp->_next;
-				this->deallocate(reinterpret_cast<int *>(to_delete), sizeof(Element<T> *));
+				this->deallocate(reinterpret_cast<T *>(to_delete), sizeof(Element<T> *));
 				_count--;
 				_size--;
 			}
@@ -809,7 +857,7 @@ namespace ft
 				tmp = tmp->_next;
 				if (to_delete == _nodes)
 					_nodes = tmp;
-				this->deallocate(reinterpret_cast<int *>(to_delete), sizeof(Element<T> *));
+				this->deallocate(reinterpret_cast<T *>(to_delete), sizeof(Element<T> *));
 				_count--;
 				_size--;
 			}
@@ -833,7 +881,7 @@ namespace ft
 				begin->_next->_prev = tmp;
 				Element<T> *to_delete = begin;
 				begin = begin->_next;
-				this->deallocate(reinterpret_cast<int *>(to_delete), sizeof(Element<T> *));
+				this->deallocate(reinterpret_cast<T *>(to_delete), sizeof(Element<T> *));
 				_count--;
 				_size--;
 			}
@@ -857,7 +905,7 @@ namespace ft
 				begin->_next->_prev = tmp;
 				Element<T> *to_delete = begin;
 				begin = begin->_next;
-				this->deallocate(reinterpret_cast<int *>(to_delete), sizeof(Element<T> *));
+				this->deallocate(reinterpret_cast<T *>(to_delete), sizeof(Element<T> *));
 				_count--;
 				_size--;
 			}
@@ -1002,7 +1050,6 @@ namespace ft
 		Element<T> *save = position->_next;
 		Element<T> *tmp = x._nodes;
 		Element<T> *xend = tmp->_prev;
-		;
 
 		position->_next = tmp;
 		tmp->_prev = position->_prev->_next;
@@ -1014,6 +1061,21 @@ namespace ft
 		_nodes->_prev->_content = static_cast<T>(_size);
 		x._count = 0;
 		x._size = 0;
+	}
+
+	template <class T, class Alloc>
+	void List<T, Alloc>::swap(List &list)
+	{
+		Element<T> *tmp = list._nodes;
+		list._nodes = _nodes;
+		_nodes = tmp;
+		size_t i;
+		i = list._size;
+		list._size = _size;
+		_size = i;
+		i = list._count;
+		list._count = _count;
+		_count = i;
 	}
 
 	//Iterators
@@ -1044,31 +1106,31 @@ namespace ft
 	template <class T, class Alloc>
 	typename List<T, Alloc>::reverse_iterator List<T, Alloc>::rbegin()
 	{
-		return Reverse_Iterator<T>(_nodes->_prev);
+		return Reverse_Iterator<T>(_nodes->_prev->_prev);
 	}
 
 	template <class T, class Alloc>
 	typename List<T, Alloc>::reverse_iterator List<T, Alloc>::rend()
 	{
-		return Reverse_Iterator<T>(_nodes);
+		return Reverse_Iterator<T>(_nodes->_prev);
 	}
 
 	template <class T, class Alloc>
 	typename List<T, Alloc>::const_reverse_iterator List<T, Alloc>::rbegin() const
 	{
-		return Const_Reverse_Iterator<T>(_nodes->_prev);
+		return Const_Reverse_Iterator<T>(_nodes->_prev->_prev);
 	}
 
 	template <class T, class Alloc>
 	typename List<T, Alloc>::const_reverse_iterator List<T, Alloc>::rend() const
 	{
-		return Const_Reverse_Iterator<T>(_nodes);
+		return Const_Reverse_Iterator<T>(_nodes->_prev);
 	}
 
 }
 
 template <typename T>
-std::ostream &operator<<(std::ostream &output, const ft::Element<T>&e)
+std::ostream &operator<<(std::ostream &output, const ft::Element<T> &e)
 {
 	output << e._content;
 	return output;

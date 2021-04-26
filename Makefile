@@ -10,7 +10,7 @@ CCF = $(CC) $(FLAGS)
 
 RM = rm -f
 
-LIST_SRC = includes/
+LIST_SRC = includes/List.hpp
 
 
 all: $(NAME)
