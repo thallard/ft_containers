@@ -333,7 +333,8 @@ namespace ft
 	template <class T, class Alloc>
 	List<T, Alloc>::List(const Alloc &alloc)
 	{
-		_nodes = reinterpret_cast<Element<T> *>(alloc.allocate(sizeof(Element<T> *)));
+		(void)alloc;
+		_nodes = reinterpret_cast<Element<T> *>(this->allocate(sizeof(Element<T> *)));
 		_nodes->_content = 0;
 		_nodes->_prev = _nodes;
 		_nodes->_next = _nodes;
