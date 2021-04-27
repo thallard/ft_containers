@@ -3,17 +3,17 @@
 #include <deque>
 #include <memory>
 #include <iostream>
+#include "List.hpp"
 
 namespace ft
 {
 	template <class T, class Container>
 	class Stack;
 
-	template <class T, class Container = std::deque<T> >
+	template <class T, class Container = ft::List<T> >
 	class Stack
 	{
-	protected:
-		Container c;
+	
 
 	public:
 		typedef Container container_type;
@@ -31,6 +31,8 @@ namespace ft
 		size_type size() const;
 		void push(const value_type &value);
 		void pop();
+	protected:
+		container_type c;
 	};
 
 	template <typename T, class Container>
@@ -59,13 +61,13 @@ namespace ft
 	template <typename T, class Container>
 	typename Stack<T, Container>::value_type &Stack<T, Container>::top()
 	{
-		return (*c.end());
+		return (c.back());
 	}
 
 	template <typename T, class Container>
 	const typename Stack<T, Container>::value_type &Stack<T, Container>::top() const
 	{
-		return (*c.end());
+		return (c.back());
 	}
 
 		template <typename T, class Container>
