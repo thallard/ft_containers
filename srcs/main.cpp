@@ -1,4 +1,5 @@
 #include "../includes/List.hpp"
+#include "../includes/Stack.hpp"
 #include <list>
 #include <iterator>
 
@@ -23,12 +24,20 @@ int main()
 	ft::List<int> copy(newList);
 	ft::List<int>::iterator cpy1 = copy.begin();
 	ft::List<int>::iterator cpy2 = copy.end();
+
 	newList.push_back(40);
 	while (cpy1 != cpy2)
 	{
 		std::cout << "\e[91mContent : " << *cpy1  << "\e[0m" <<std::endl;
 		cpy1++;
 	}
+					// ft::List<int>::reverse_iterator rcpy1 = copy.rbegin();
+					// ft::List<int>::reverse_iterator rcpy2 = copy.rend();
+					// while (rcpy1 != rcpy2)
+					// {
+					// 	std::cout << "\e[95mReverse Content : " << *rcpy1  << "\e[0m" <<std::endl;
+					// 	rcpy1++;
+					// }
 	std::cout<< "size: " <<  newList.size() << " -- max_size: " << newList.max_size() << std::endl;
 	// std::cout << "\n\n";
 
@@ -312,13 +321,12 @@ std::cout <<"begin de la real :" << *(--realList.begin()) << std::endl;
 	// 	std::cout << ' ' << *it;
 	// std::cout << "\nend: " << *first2.end();
 	// std::cout << std::endl;
-
 	std::list<int> lst1(5, 100);
 	std::list<int> lst2(6, 42);
 	ft::List<int> ls1(5, 100);
 	ft::List<int> ls2(6, 42);
-	lst1.swap(lst2);
-	ls1.swap(ls2);
+	lst1.splice(--(--lst1.end()), lst2,  ++lst2.begin(), --lst2.end());
+	ls1.splice(--(--ls1.end()), ls2, ++ls2.begin(), --ls2.end());
 
 	ft::List<int>::iterator it1 = ls1.begin();
 	ft::List<int>::iterator end1 =  ls1.end();
@@ -332,23 +340,25 @@ std::cout <<"begin de la real :" << *(--realList.begin()) << std::endl;
 	std::list<int>::iterator it20 = lst2.begin();
 	std::list<int>::iterator end20 = lst2.end();
 
+	std::cout << "\e[35mTaille de la notre ls1 : " << *--ls1.begin()  << "\e[0m" <<std::endl;
 	while (it1 != end1)
 	{
 		std::cout << "\e[35mContent de la notre ls1 : " << *it1  << "\e[0m" <<std::endl;
 		it1++;
 	}
+	std::cout << "\e[35mTaille de la notre ls2 : " << *--ls2.begin()  << "\e[0m" <<std::endl;
 	while (it2 != end2)
 	{
 		std::cout << "\e[35mContent de la notre ls2 : " << *it2  << "\e[0m" <<std::endl;
 		it2++;
 	}
-
+std::cout << "\e[35mTaille de la vraie lst1 : " << *--lst1.begin()  << "\e[0m" <<std::endl;
 		while (it10 != end10)
 	{
 		std::cout << "\e[91mContent de la vraie lst1 : " << *it10  << "\e[0m" <<std::endl;
 		it10++;
 	}
-
+std::cout << "\e[35mTaille de la vraie lst2 : " << *--lst2.begin()  << "\e[0m" <<std::endl;
 		while (it20 != end20)
 	{
 		std::cout << "\e[91mContent de la vraie lst2 : " << *it20  << "\e[0m" <<std::endl;
@@ -356,5 +366,9 @@ std::cout <<"begin de la real :" << *(--realList.begin()) << std::endl;
 	}
 
 
+
+	ft::Stack<int> s1;
+	s1.push(20);
+	std::cout << s1.top() << std::endl;
 
 }

@@ -238,6 +238,7 @@ namespace ft
 		size_t _size;
 		size_t _count;
 		Alloc _alloc;
+
 	public:
 		typedef T value_type;
 		typedef Alloc allocator_type;
@@ -312,6 +313,8 @@ namespace ft
 		template <class Compare>
 		void merge(List &x, Compare p);
 		void splice(iterator position, List &x);
+		void splice(iterator pos, List &other, iterator it);
+		void splice(iterator pos, List &other, iterator first, iterator last);
 	};
 
 	// Default constructor
@@ -327,7 +330,7 @@ namespace ft
 	}
 
 	// Allocator constructor
-		template <class T, class Alloc>
+	template <class T, class Alloc>
 	List<T, Alloc>::List(const Alloc &alloc)
 	{
 		_nodes = reinterpret_cast<Element<T> *>(alloc.allocate(sizeof(Element<T> *)));
@@ -337,7 +340,7 @@ namespace ft
 		_size = 0;
 		_count = 0;
 	}
-	
+
 	// Fill constructor
 	template <class T, class Alloc>
 	List<T, Alloc>::List(size_t size, const T &val) : _size(size), _count(0)
@@ -348,9 +351,9 @@ namespace ft
 		{
 			tmp->_next = reinterpret_cast<Element<T> *>(this->allocate(sizeof(Element<T> *)));
 			if (val == T())
-			tmp->_content = T();
+				tmp->_content = T();
 			else
-			tmp->_content = val;
+				tmp->_content = val;
 			tmp->_next->_prev = tmp;
 			tmp = tmp->_next;
 			_count++;
@@ -381,7 +384,7 @@ namespace ft
 			tmp->_content = static_cast<T>(_size);
 			tmp->_next = _nodes;
 			_nodes->_prev = tmp;
-			return ;
+			return;
 		}
 		_size = 0;
 		InputIterator copy = first;
@@ -510,7 +513,7 @@ namespace ft
 	template <class T, class Alloc>
 	typename List<T, Alloc>::size_type List<T, Alloc>::max_size() const
 	{
-		return std::min<size_type>(Alloc::max_size(), static_cast<size_type>(std::numeric_limits<difference_type>::max())) / sizeof(size_type) - 1;
+		return std::numeric_limits<size_type>::max() / sizeof(*_nodes);
 	}
 
 	// Members access push_back
@@ -591,11 +594,12 @@ namespace ft
 	// Modifiers resize
 	template <class T, class Alloc>
 	void List<T, Alloc>::resize(size_type count)
-	{	if (count == 1)
-			{
-				_nodes->_prev->_prev->_content = static_cast<T>(count);
-				return ;
-			}
+	{
+		if (count == 1)
+		{
+			_nodes->_prev->_prev->_content = static_cast<T>(count);
+			return;
+		}
 		if (_size < count)
 		{
 			Element<T> *tmp = _nodes;
@@ -615,7 +619,7 @@ namespace ft
 		}
 		else
 		{
-		
+
 			Element<T> *tmp = _nodes;
 			size_t i;
 			for (i = 1; i < count; i++)
@@ -653,6 +657,7 @@ namespace ft
 		this->deallocate(reinterpret_cast<T *>(tmp), sizeof(Element<T> *));
 		_size--;
 		_count--;
+		_nodes->_prev->_content = static_cast<T>(_size);
 		return start;
 	}
 
@@ -677,6 +682,7 @@ namespace ft
 		}
 		save->_next = tmp;
 		tmp->_prev = save;
+		_nodes->_prev->_content = static_cast<T>(_size);
 		return start;
 	}
 
@@ -745,8 +751,8 @@ namespace ft
 	void List<T, Alloc>::insert(List<T, Alloc>::iterator pos, List<T, Alloc>::iterator first, List<T, Alloc>::iterator last)
 	{
 
-			List<T, Alloc>::iterator start = static_cast<List<T, Alloc>::iterator>(first);
-		
+		List<T, Alloc>::iterator start = static_cast<List<T, Alloc>::iterator>(first);
+
 		size_t count = 0;
 		while (start != last)
 		{
@@ -812,7 +818,10 @@ namespace ft
 			tmp = tmp->_next;
 			this->deallocate(reinterpret_cast<T *>(tmp->_prev), sizeof(Element<T> *));
 		}
-		_nodes = tmp;
+		_nodes = end;
+		_nodes->_next = _nodes;
+		_nodes->_prev = _nodes;
+		_nodes->_content = static_cast<T>(0);
 		_count = 0;
 		_size = 0;
 	}
@@ -1047,20 +1056,51 @@ namespace ft
 	{
 		_count += x._size;
 		_size += x._size;
-		Element<T> *save = position->_next;
+		Element<T> *save = position->_next->_prev;
 		Element<T> *tmp = x._nodes;
 		Element<T> *xend = tmp->_prev;
 
-		position->_next = tmp;
-		tmp->_prev = position->_prev->_next;
 		xend->_prev->_next = save;
+		save->_prev->_next = tmp;
+		tmp->_prev = save->_prev;
 		save->_prev = xend->_prev;
+
+		_nodes->_prev->_content = static_cast<T>(_size);
+		xend->_content = 0;
 		x._nodes = xend;
 		xend->_prev = xend;
 		xend->_next = xend;
-		_nodes->_prev->_content = static_cast<T>(_size);
 		x._count = 0;
 		x._size = 0;
+		if (position == begin())
+			_nodes = tmp;
+	}
+
+	template <class T, class Alloc>
+	void List<T, Alloc>::splice(iterator pos, List &list, iterator it)
+	{
+		_count += 1;
+		_size += 1;
+		Element<T> *save = pos->_next->_prev;
+		Element<T> *tmp = it->_prev->_next;
+		Element<T> *xend = tmp->_prev;
+
+		xend->_next = tmp->_next;
+		tmp->_next->_prev = xend;
+
+		tmp->_prev = save->_prev;
+		tmp->_prev->_next = tmp;
+		save->_prev = tmp;
+		tmp->_next = save;
+		_nodes->_prev->_content = static_cast<T>(_size);
+
+		if (pos == begin())
+			_nodes = tmp;
+		if (it == list.begin())
+			list._nodes = xend->_next;
+		list._nodes->_prev->_content -= 1;
+		list._count -= 1;
+		list._size -= 1;
 	}
 
 	template <class T, class Alloc>
@@ -1076,6 +1116,40 @@ namespace ft
 		i = list._count;
 		list._count = _count;
 		_count = i;
+	}
+
+	template <class T, class Alloc>
+	void List<T, Alloc>::splice(iterator pos, List &other, iterator first, iterator last)
+	{
+		Element<T> *A = pos->_prev;
+		Element<T> *B = A->_next;
+		Element<T> *E = first->_next->_prev;
+		Element<T> *F = last->_prev;
+		Element<T> *end = F->_next;
+		Element<T> *tmp = E;
+
+		while (tmp != end)
+		{
+			tmp = tmp->_next;
+			_size++;
+			_count++;
+			other._size--;
+			other._count--;
+		}
+		E->_prev->_next = F->_next;
+		F->_next->_prev = E->_prev;
+
+		A->_next = E;
+		E->_prev = A;
+
+		F->_next = B;
+		B->_prev = F;
+		if (pos == begin())
+			_nodes = E;
+		if (first == other.begin())
+			other._nodes = end;
+		_nodes->_prev->_content = static_cast<T>(_size);
+		other._nodes->_prev->_content = static_cast<T>(other._size);
 	}
 
 	//Iterators
