@@ -30,7 +30,7 @@ namespace ft
 		size_type size() const;
 		void push(const value_type &value);
 		void pop();
-		friend bool operator==(const Stack<T, Container> &lhs, const Stack<T, Container> &rhs);
+		friend bool operator==(const Stack &lhs, const Stack &rhs);
 		friend bool operator!=(const Stack &lhs, const Stack &rhs);
 		friend bool operator<(const Stack &lhs, const Stack &rhs);
 		friend bool operator<=(const Stack &lhs, const Stack &rhs);
