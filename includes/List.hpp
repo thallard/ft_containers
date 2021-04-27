@@ -531,7 +531,11 @@ namespace ft
 	void List<T, Alloc>::pop_back()
 	{
 		if (!_size)
-			return;
+		{
+			dprintf(1, "oui\n");
+				return;
+		}
+		
 		Element<T> *last = _nodes->_prev->_prev;
 		last->_prev->_next = last->_next;
 		last->_next->_prev = last->_prev;
@@ -596,11 +600,12 @@ namespace ft
 	template <class T, class Alloc>
 	void List<T, Alloc>::resize(size_type count)
 	{
-		if (count == 1)
-		{
-			_nodes->_prev->_prev->_content = static_cast<T>(count);
-			return;
-		}
+		// if (count == 1)
+		// {
+		// 	dprintf(1, "ici\n");
+		// 	_nodes->_prev->_prev->_content = static_cast<T>(count);
+		// 	return;
+		// }
 		if (_size < count)
 		{
 			Element<T> *tmp = _nodes;
