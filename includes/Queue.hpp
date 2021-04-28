@@ -147,6 +147,6 @@ namespace ft
 	{
 		return (lhs.c >= rhs.c);
 	}
-} // namespace ft
+}
 
 #endif

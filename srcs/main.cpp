@@ -1,6 +1,8 @@
 #include "../includes/List.hpp"
 #include "../includes/Stack.hpp"
 #include <list>
+#include <stack>
+#include <queue>
 #include <iterator>
 
 bool not_single_digit (const int& value) { return (value>9); }
@@ -12,6 +14,46 @@ bool mycomparison (double first, double second)
 
 int main()
 {
+
+std::list<int> theo_test1;
+std::list<int> theo_test2;
+ft::List<int> theo_test3;
+ft::List<int> theo_test4;
+
+
+theo_test1.push_back(3);
+theo_test2.push_back(2);
+theo_test2.push_back(2);
+theo_test2.push_back(4);
+theo_test1.push_back(5);
+theo_test1.push_back(1);
+theo_test1.merge(theo_test2);
+
+
+theo_test3.push_back(3);
+theo_test4.push_back(2);
+theo_test4.push_back(2);
+theo_test4.push_back(4);
+theo_test3.push_back(5);
+theo_test3.push_back(1);
+theo_test3.merge(theo_test4);
+
+std::list<int>::iterator begin = theo_test1.begin();
+std::list<int>::iterator end = theo_test1.end();
+while (begin != end)
+{
+std::cout << "merge reel: " << *begin << std::endl;
+begin++;
+}
+
+ft::List<int>::iterator begin8 = theo_test3.begin();
+ft::List<int>::iterator end8 = theo_test3.end();
+while (begin8 != end8)
+{
+std::cout << "merge: " << *begin8 << std::endl;
+begin8++;
+}
+
 	// size_t size = 5;
 	// int val = 100;
 	ft::List<int> newList(3, 42);
@@ -368,7 +410,18 @@ std::cout << "\e[35mTaille de la vraie lst2 : " << *--lst2.begin()  << "\e[0m" <
 
 
 	ft::Stack<int> s1;
+	std::stack<int> s2;
 	s1.push(20);
-	std::cout << s1.top() << std::endl;
+	s2.push(20);
+		std::cout << s1.top() << " " << s2.top() << std::endl;
+	s1.push(30);
+	s2.push(30);
+	std::cout << s1.top() << " " << s2.top() << std::endl;
 
+	s1.pop();
+	s2.pop();
+	std::cout << s1.top() << " " << s2.top() << std::endl;
+	s1.pop();
+	s2.pop();
+// std::cout << s2.top() << " " << s2.top() << std::endl;
 }
