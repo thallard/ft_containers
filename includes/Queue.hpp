@@ -1,8 +1,5 @@
-#ifndef Queue_HPP
-#define Queue_HPP
-#include <deque>
-#include <memory>
-#include <iostream>
+#ifndef QUEUE_HPP
+#define QUEUE_HPP
 #include "List.hpp"
 
 namespace ft
@@ -22,11 +19,11 @@ namespace ft
 		Queue(const Queue &other);
 		~Queue();
 		Queue &operator=(const Queue &other);
-		
-		value_type& front();
-		value_type& back();
-		const value_type& front() const;
-		const value_type& back() const;
+
+		value_type &front();
+		value_type &back();
+		const value_type &front() const;
+		const value_type &back() const;
 		bool empty() const;
 		size_type size() const;
 		void push(const value_type &value);
@@ -37,10 +34,9 @@ namespace ft
 		friend bool operator<=(const Queue &lhs, const Queue &rhs);
 		friend bool operator>(const Queue &lhs, const Queue &rhs);
 		friend bool operator>=(const Queue &lhs, const Queue &rhs);
+
 	protected:
 		Container c;
-
-		
 	};
 
 	template <typename T, class Container>
@@ -77,7 +73,7 @@ namespace ft
 		return (c.front());
 	}
 
-		template <typename T, class Container>
+	template <typename T, class Container>
 	typename Queue<T, Container>::value_type &Queue<T, Container>::back()
 	{
 		return (c.back());

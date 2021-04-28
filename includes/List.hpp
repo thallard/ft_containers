@@ -238,6 +238,7 @@ namespace ft
 		size_t _size;
 		size_t _count;
 		Alloc _alloc;
+
 	public:
 		typedef T value_type;
 		typedef Alloc allocator_type;
@@ -252,10 +253,10 @@ namespace ft
 		typedef Reverse_Iterator<T> reverse_iterator;
 		typedef Const_Reverse_Iterator<T> const_reverse_iterator;
 
-		explicit List(const allocator_type& alloc = allocator_type());
-		explicit List(size_type size, const T &val = value_type(), const allocator_type& alloc = allocator_type());
+		explicit List(const allocator_type &alloc = allocator_type());
+		explicit List(size_type size, const T &val = value_type(), const allocator_type &alloc = allocator_type());
 		template <class InputIterator>
-		List(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type());
+		List(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type());
 		List(List &other);
 		~List();
 		List<T, Alloc> &operator=(List const &ref);
@@ -315,24 +316,12 @@ namespace ft
 		void splice(iterator pos, List &other, iterator first, iterator last);
 	};
 
-	// Default constructor
-	// template <class T, class Alloc>
-	// List<T, Alloc>::List() : _alloc()
-	// {
-	// 	_nodes = reinterpret_cast<Element<T> *>(_alloc.allocate(sizeof(Element<T> *)));
-	// 	_nodes->_content = 0;
-	// 	_nodes->_prev = _nodes;
-	// 	_nodes->_next = _nodes;
-	// 	_size = 0;
-	// 	_count = 0;
-	// }
-
-	// Allocator constructor
+	// Allocator and default constructor
 	template <class T, class Alloc>
 	List<T, Alloc>::List(const Alloc &alloc) : _alloc(alloc)
 	{
 		_nodes = reinterpret_cast<Element<T> *>(_alloc.allocate(sizeof(Element<T> *)));
-		_nodes->_content = 0;
+		_nodes->_content = static_cast<T>(0);
 		_nodes->_prev = _nodes;
 		_nodes->_next = _nodes;
 		_size = 0;
@@ -341,7 +330,7 @@ namespace ft
 
 	// Fill constructor
 	template <class T, class Alloc>
-	List<T, Alloc>::List(size_t size, const T &val, const allocator_type& alloc) : _size(size), _count(0), _alloc(alloc)
+	List<T, Alloc>::List(size_t size, const T &val, const allocator_type &alloc) : _size(size), _count(0), _alloc(alloc)
 	{
 		_nodes = reinterpret_cast<Element<T> *>(_alloc.allocate(sizeof(Element<T> *)));
 		Element<T> *tmp = _nodes;
@@ -364,7 +353,7 @@ namespace ft
 	// Range constructor
 	template <class T, class Alloc>
 	template <class InputIterator>
-	List<T, Alloc>::List(InputIterator first, InputIterator last, const allocator_type& alloc) : _alloc(alloc)
+	List<T, Alloc>::List(InputIterator first, InputIterator last, const allocator_type &alloc) : _alloc(alloc)
 	{
 		if (std::is_integral<InputIterator>::value)
 		{
@@ -528,11 +517,18 @@ namespace ft
 	void List<T, Alloc>::pop_back()
 	{
 		if (!_size)
+			return;
+		if (_size == 1)
 		{
-			dprintf(1, "oui\n");
-				return;
+			Element<T> *save = _nodes->_next;
+			_nodes->_next = _nodes;
+			_nodes->_prev = _nodes;
+			_alloc.deallocate(reinterpret_cast<T *>(save), sizeof(Element<T> *));
+			_count--;
+			_size--;
+			return;
 		}
-		
+
 		Element<T> *last = _nodes->_prev->_prev;
 		last->_prev->_next = last->_next;
 		last->_next->_prev = last->_prev;
@@ -599,7 +595,6 @@ namespace ft
 	{
 		// if (count == 1)
 		// {
-		// 	dprintf(1, "ici\n");
 		// 	_nodes->_prev->_prev->_content = static_cast<T>(count);
 		// 	return;
 		// }
@@ -1031,28 +1026,20 @@ namespace ft
 			tmp = tn;
 		}
 	}
+
+	template <class T, class Alloc>
+	template <class Compare>
+	void List<T, Alloc>::merge(List &x, Compare p)
+	{
+		splice(end(), x);
+		sort(p);
+	}
+
 	template <class T, class Alloc>
 	void List<T, Alloc>::merge(List &x)
 	{
-		_count += x._size;
-		_size += x._size;
-		Element<T> *end = _nodes->_prev;
-		Element<T> *last = end->_prev;
-		Element<T> *tmp = x._nodes;
-		x._nodes = x._nodes->_prev;
-		while (tmp != x._nodes)
-		{
-			last->_next = tmp;
-			tmp->_prev = last;
-			last = tmp;
-			tmp = tmp->_next;
-		}
-		last->_next = end;
-		end->_prev = last;
-		x._nodes->_prev = x._nodes;
-		x._nodes->_next = x._nodes;
-		x._count = 0;
-		x._size = 0;
+		splice(end(), x);
+		sort();
 	}
 	template <class T, class Alloc>
 	void List<T, Alloc>::splice(iterator position, List &x)

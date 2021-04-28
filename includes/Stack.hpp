@@ -1,8 +1,5 @@
 #ifndef STACK_HPP
 #define STACK_HPP
-#include <deque>
-#include <memory>
-#include <iostream>
 #include "List.hpp"
 
 namespace ft
@@ -22,7 +19,6 @@ namespace ft
 		Stack(const Stack &other);
 		~Stack();
 		Stack &operator=(const Stack &other);
-		
 
 		value_type &top();
 		const value_type &top() const;
@@ -36,10 +32,9 @@ namespace ft
 		friend bool operator<=(const Stack &lhs, const Stack &rhs);
 		friend bool operator>(const Stack &lhs, const Stack &rhs);
 		friend bool operator>=(const Stack &lhs, const Stack &rhs);
+
 	protected:
 		Container c;
-
-		
 	};
 
 	template <typename T, class Container>
