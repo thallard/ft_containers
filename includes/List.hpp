@@ -238,7 +238,6 @@ namespace ft
 		size_t _size;
 		size_t _count;
 		Alloc _alloc;
-
 	public:
 		typedef T value_type;
 		typedef Alloc allocator_type;
@@ -253,11 +252,10 @@ namespace ft
 		typedef Reverse_Iterator<T> reverse_iterator;
 		typedef Const_Reverse_Iterator<T> const_reverse_iterator;
 
-		List();
-		explicit List(const Alloc &alloc);
-		explicit List(size_type size, const T &val = value_type());
+		explicit List(const allocator_type& alloc = allocator_type());
+		explicit List(size_type size, const T &val = value_type(), const allocator_type& alloc = allocator_type());
 		template <class InputIterator>
-		List(InputIterator first, InputIterator last);
+		List(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type());
 		List(List &other);
 		~List();
 		List<T, Alloc> &operator=(List const &ref);
@@ -318,23 +316,22 @@ namespace ft
 	};
 
 	// Default constructor
-	template <class T, class Alloc>
-	List<T, Alloc>::List()
-	{
-		_nodes = reinterpret_cast<Element<T> *>(this->allocate(sizeof(Element<T> *)));
-		_nodes->_content = 0;
-		_nodes->_prev = _nodes;
-		_nodes->_next = _nodes;
-		_size = 0;
-		_count = 0;
-	}
+	// template <class T, class Alloc>
+	// List<T, Alloc>::List() : _alloc()
+	// {
+	// 	_nodes = reinterpret_cast<Element<T> *>(_alloc.allocate(sizeof(Element<T> *)));
+	// 	_nodes->_content = 0;
+	// 	_nodes->_prev = _nodes;
+	// 	_nodes->_next = _nodes;
+	// 	_size = 0;
+	// 	_count = 0;
+	// }
 
 	// Allocator constructor
 	template <class T, class Alloc>
-	List<T, Alloc>::List(const Alloc &alloc)
+	List<T, Alloc>::List(const Alloc &alloc) : _alloc(alloc)
 	{
-		(void)alloc;
-		_nodes = reinterpret_cast<Element<T> *>(this->allocate(sizeof(Element<T> *)));
+		_nodes = reinterpret_cast<Element<T> *>(_alloc.allocate(sizeof(Element<T> *)));
 		_nodes->_content = 0;
 		_nodes->_prev = _nodes;
 		_nodes->_next = _nodes;
@@ -344,13 +341,13 @@ namespace ft
 
 	// Fill constructor
 	template <class T, class Alloc>
-	List<T, Alloc>::List(size_t size, const T &val) : _size(size), _count(0)
+	List<T, Alloc>::List(size_t size, const T &val, const allocator_type& alloc) : _size(size), _count(0), _alloc(alloc)
 	{
-		_nodes = reinterpret_cast<Element<T> *>(this->allocate(sizeof(Element<T> *)));
+		_nodes = reinterpret_cast<Element<T> *>(_alloc.allocate(sizeof(Element<T> *)));
 		Element<T> *tmp = _nodes;
 		for (size_t i = 0; i < _size; i++)
 		{
-			tmp->_next = reinterpret_cast<Element<T> *>(this->allocate(sizeof(Element<T> *)));
+			tmp->_next = reinterpret_cast<Element<T> *>(_alloc.allocate(sizeof(Element<T> *)));
 			if (val == T())
 				tmp->_content = T();
 			else
@@ -367,16 +364,16 @@ namespace ft
 	// Range constructor
 	template <class T, class Alloc>
 	template <class InputIterator>
-	List<T, Alloc>::List(InputIterator first, InputIterator last)
+	List<T, Alloc>::List(InputIterator first, InputIterator last, const allocator_type& alloc) : _alloc(alloc)
 	{
 		if (std::is_integral<InputIterator>::value)
 		{
 			_size = static_cast<size_t>(first);
-			_nodes = reinterpret_cast<Element<T> *>(this->allocate(sizeof(Element<T> *)));
+			_nodes = reinterpret_cast<Element<T> *>(_alloc.allocate(sizeof(Element<T> *)));
 			Element<T> *tmp = _nodes;
 			for (size_t i = 0; i < _size; i++)
 			{
-				tmp->_next = reinterpret_cast<Element<T> *>(this->allocate(sizeof(Element<T> *)));
+				tmp->_next = reinterpret_cast<Element<T> *>(_alloc.allocate(sizeof(Element<T> *)));
 				tmp->_content = static_cast<T>(last);
 				tmp->_next->_prev = tmp;
 				tmp = tmp->_next;
@@ -395,12 +392,12 @@ namespace ft
 			copy++;
 			_size++;
 		}
-		_nodes = reinterpret_cast<Element<T> *>(this->allocate(sizeof(Element<T> *)));
+		_nodes = reinterpret_cast<Element<T> *>(_alloc.allocate(sizeof(Element<T> *)));
 		Element<T> *tmp = _nodes;
 		Element<T> save;
 		while (it != last)
 		{
-			tmp->_next = reinterpret_cast<Element<T> *>(this->allocate(sizeof(Element<T> *)));
+			tmp->_next = reinterpret_cast<Element<T> *>(_alloc.allocate(sizeof(Element<T> *)));
 			save._content = static_cast<T>(it);
 			tmp->_content = save._content;
 			tmp->_next->_prev = tmp;
@@ -419,7 +416,7 @@ namespace ft
 	{
 		_size = 0;
 		_count = ref._count;
-		_nodes = reinterpret_cast<Element<T> *>(this->allocate(sizeof(Element<T> *)));
+		_nodes = reinterpret_cast<Element<T> *>(_alloc.allocate(sizeof(Element<T> *)));
 		_nodes->_next = _nodes;
 		_nodes->_prev = _nodes;
 		if (ref._size > 0)
@@ -435,7 +432,7 @@ namespace ft
 			return *this;
 		if (_size > 0)
 			clear();
-		_nodes = reinterpret_cast<Element<T> *>(this->allocate(sizeof(Element<T> *)));
+		_nodes = reinterpret_cast<Element<T> *>(_alloc.allocate(sizeof(Element<T> *)));
 		_nodes->_next = _nodes;
 		_nodes->_prev = _nodes;
 		insert(begin(), ref.begin(), ref.end());
@@ -457,9 +454,9 @@ namespace ft
 			if (i + 1 < _size + 1)
 				elem = next;
 			else
-				this->deallocate(reinterpret_cast<T *>(elem), sizeof(Element<T> *));
+				_alloc.deallocate(reinterpret_cast<T *>(elem), sizeof(Element<T> *));
 			if (i + 1 < _size + 1)
-				this->deallocate(reinterpret_cast<T *>(next->_prev), sizeof(Element<T> *));
+				_alloc.deallocate(reinterpret_cast<T *>(next->_prev), sizeof(Element<T> *));
 			next = NULL;
 		}
 	}
@@ -539,7 +536,7 @@ namespace ft
 		Element<T> *last = _nodes->_prev->_prev;
 		last->_prev->_next = last->_next;
 		last->_next->_prev = last->_prev;
-		this->deallocate(reinterpret_cast<T *>(last), sizeof(Element<T> *));
+		_alloc.deallocate(reinterpret_cast<T *>(last), sizeof(Element<T> *));
 		_size--;
 		_count--;
 	}
@@ -571,7 +568,7 @@ namespace ft
 		_nodes->_prev->_next = _nodes->_next;
 		_nodes->_next->_prev = _nodes->_prev;
 		_nodes = _nodes->_next;
-		this->deallocate(reinterpret_cast<T *>(first), sizeof(Element<T> *));
+		_alloc.deallocate(reinterpret_cast<T *>(first), sizeof(Element<T> *));
 		_size--;
 		_count--;
 	}
@@ -613,7 +610,7 @@ namespace ft
 			tmp = end->_prev;
 			for (size_t i = 0; i < count - _size; i++)
 			{
-				tmp->_next = reinterpret_cast<Element<T> *>(this->allocate(sizeof(Element<T> *)));
+				tmp->_next = reinterpret_cast<Element<T> *>(_alloc.allocate(sizeof(Element<T> *)));
 				tmp->_next->_content = T();
 				tmp->_next->_prev = tmp;
 				tmp = tmp->_next;
@@ -635,10 +632,10 @@ namespace ft
 			for (size_t j = ++i; j < _size; j++)
 			{
 				tmp = tmp->_next;
-				this->deallocate(reinterpret_cast<T *>(tmp->_prev), sizeof(Element<T> *));
+				_alloc.deallocate(reinterpret_cast<T *>(tmp->_prev), sizeof(Element<T> *));
 			}
 			Element<T> *end = tmp->_next;
-			this->deallocate(reinterpret_cast<T *>(tmp), sizeof(Element<T> *));
+			_alloc.deallocate(reinterpret_cast<T *>(tmp), sizeof(Element<T> *));
 			last->_next = end;
 			end->_prev = last;
 			end->_content = static_cast<T>(count);
@@ -660,7 +657,7 @@ namespace ft
 		}
 		tmp->_prev->_next = tmp->_next;
 		tmp->_next->_prev = tmp->_prev;
-		this->deallocate(reinterpret_cast<T *>(tmp), sizeof(Element<T> *));
+		_alloc.deallocate(reinterpret_cast<T *>(tmp), sizeof(Element<T> *));
 		_size--;
 		_count--;
 		_nodes->_prev->_content = static_cast<T>(_size);
@@ -683,7 +680,7 @@ namespace ft
 		while (start != last && _size-- && _count--)
 		{
 			tmp = tmp->_next;
-			this->deallocate(reinterpret_cast<T *>(tmp->_prev), sizeof(Element<T> *));
+			_alloc.deallocate(reinterpret_cast<T *>(tmp->_prev), sizeof(Element<T> *));
 			start++;
 		}
 		save->_next = tmp;
@@ -708,7 +705,7 @@ namespace ft
 		Element<T> *save = tmp->_prev;
 		if (save != _nodes->_prev)
 		{
-			Element<T> *elem = reinterpret_cast<Element<T> *>(this->allocate(sizeof(Element<T> *)));
+			Element<T> *elem = reinterpret_cast<Element<T> *>(_alloc.allocate(sizeof(Element<T> *)));
 			elem->_content = value;
 			tmp->_prev = elem;
 			save->_next = elem;
@@ -822,7 +819,7 @@ namespace ft
 		while (tmp != end)
 		{
 			tmp = tmp->_next;
-			this->deallocate(reinterpret_cast<T *>(tmp->_prev), sizeof(Element<T> *));
+			_alloc.deallocate(reinterpret_cast<T *>(tmp->_prev), sizeof(Element<T> *));
 		}
 		_nodes = end;
 		_nodes->_next = _nodes;
@@ -846,7 +843,7 @@ namespace ft
 				tmp->_next->_prev = tmp->_prev;
 				Element<T> *to_delete = tmp;
 				tmp = tmp->_next;
-				this->deallocate(reinterpret_cast<T *>(to_delete), sizeof(Element<T> *));
+				_alloc.deallocate(reinterpret_cast<T *>(to_delete), sizeof(Element<T> *));
 				_count--;
 				_size--;
 			}
@@ -872,7 +869,7 @@ namespace ft
 				tmp = tmp->_next;
 				if (to_delete == _nodes)
 					_nodes = tmp;
-				this->deallocate(reinterpret_cast<T *>(to_delete), sizeof(Element<T> *));
+				_alloc.deallocate(reinterpret_cast<T *>(to_delete), sizeof(Element<T> *));
 				_count--;
 				_size--;
 			}
@@ -896,7 +893,7 @@ namespace ft
 				begin->_next->_prev = tmp;
 				Element<T> *to_delete = begin;
 				begin = begin->_next;
-				this->deallocate(reinterpret_cast<T *>(to_delete), sizeof(Element<T> *));
+				_alloc.deallocate(reinterpret_cast<T *>(to_delete), sizeof(Element<T> *));
 				_count--;
 				_size--;
 			}
@@ -920,7 +917,7 @@ namespace ft
 				begin->_next->_prev = tmp;
 				Element<T> *to_delete = begin;
 				begin = begin->_next;
-				this->deallocate(reinterpret_cast<T *>(to_delete), sizeof(Element<T> *));
+				_alloc.deallocate(reinterpret_cast<T *>(to_delete), sizeof(Element<T> *));
 				_count--;
 				_size--;
 			}
