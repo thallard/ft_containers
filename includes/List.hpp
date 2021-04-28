@@ -314,6 +314,8 @@ namespace ft
 		void splice(iterator position, List &x);
 		void splice(iterator pos, List &other, iterator it);
 		void splice(iterator pos, List &other, iterator first, iterator last);
+		
+		friend bool operator==( const List<T, Alloc>& lhs, const List<T, Alloc>& rhs );
 	};
 
 	// Allocator and default constructor
@@ -541,18 +543,18 @@ namespace ft
 	template <class T, class Alloc>
 	void List<T, Alloc>::push_front(const T &value)
 	{
-		resize(_size + 1);
-		Element<T> *elem = _nodes->_prev->_prev;
-		Element<T> *last = elem->_prev;
-		Element<T> *end = _nodes->_prev;
+		Element<T> *elem = reinterpret_cast<Element<T> *>(_alloc.allocate(sizeof(Element<T> *)));
 		elem->_content = value;
-		last->_next = end;
-		end->_prev = last;
-		end->_next = elem;
-		elem->_prev = end;
-		elem->_next = _nodes;
-		_nodes->_prev = elem;
+		Element<T> *prev = _nodes->_prev;
+		Element<T> *begin = _nodes;
+		_size++;
 		_nodes = elem;
+		prev->_next = _nodes;
+		begin->_prev = _nodes;
+		_nodes->_prev = prev;
+		_nodes->_next = begin;
+		prev->_content = static_cast<T>(_size);
+		_count++;
 	}
 
 	template <class T, class Alloc>
@@ -1189,6 +1191,12 @@ namespace ft
 	typename List<T, Alloc>::const_reverse_iterator List<T, Alloc>::rend() const
 	{
 		return Const_Reverse_Iterator<T>(_nodes->_prev);
+	}
+
+	template <class T, class Alloc>
+	bool operator==( const List<T, Alloc>& lhs, const List<T, Alloc>& rhs )
+	{
+		return (lhs._nodes == rhs._nodes);
 	}
 
 }

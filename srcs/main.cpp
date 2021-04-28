@@ -1,9 +1,11 @@
 #include "../includes/List.hpp"
 #include "../includes/Stack.hpp"
+#include "../includes/Vector.hpp"
 #include <list>
 #include <stack>
 #include <queue>
 #include <iterator>
+#include <vector>
 
 bool not_single_digit (const int& value) { return (value>9); }
 
@@ -15,45 +17,34 @@ bool mycomparison (double first, double second)
 int main()
 {
 
-std::list<int> theo_test1;
-std::list<int> theo_test2;
-ft::List<int> theo_test3;
-ft::List<int> theo_test4;
+	ft::List<int> A;
+	std::list<int> B;
+	ft::List<int> C;
+	std::list<int> D;
+	std::cout << A.size() << std::endl;
+	A.push_front(8);
+	B.push_front(8);
+	A.push_back(6);
+	B.push_back(6);
+	A.push_front(27);
+	B.push_front(27);
 
-
-theo_test1.push_back(3);
-theo_test2.push_back(2);
-theo_test2.push_back(2);
-theo_test2.push_back(4);
-theo_test1.push_back(5);
-theo_test1.push_back(1);
-theo_test1.merge(theo_test2);
-
-
-theo_test3.push_back(3);
-theo_test4.push_back(2);
-theo_test4.push_back(2);
-theo_test4.push_back(4);
-theo_test3.push_back(5);
-theo_test3.push_back(1);
-theo_test3.merge(theo_test4);
-
-std::list<int>::iterator begin = theo_test1.begin();
-std::list<int>::iterator end = theo_test1.end();
-while (begin != end)
-{
-std::cout << "merge reel: " << *begin << std::endl;
-begin++;
-}
-
-ft::List<int>::iterator begin8 = theo_test3.begin();
-ft::List<int>::iterator end8 = theo_test3.end();
-while (begin8 != end8)
-{
-std::cout << "merge: " << *begin8 << std::endl;
-begin8++;
-}
-
+	A.sort();
+	B.sort();
+	 ft::List<int>::iterator C_begin = A.begin();
+	 ft::List<int>::iterator C_end = A.end();
+	 std::list<int>::iterator D_begin = B.begin();
+	 std::list<int>::iterator D_end = B.end();
+	 while (C_begin != C_end)
+	 {
+		 std::cout << "my sort: " << *C_begin << std::endl;
+		 C_begin++;
+	 }
+	 	 while (D_begin != D_end)
+	 {
+		 std::cout << "your sort: " << *D_begin << std::endl;
+		 D_begin++;
+	 }
 	// size_t size = 5;
 	// int val = 100;
 	ft::List<int> newList(3, 42);
@@ -424,4 +415,12 @@ std::cout << "\e[35mTaille de la vraie lst2 : " << *--lst2.begin()  << "\e[0m" <
 	s1.pop();
 	s2.pop();
 // std::cout << s2.top() << " " << s2.top() << std::endl;
+	std::vector<int> v1;
+	ft::Vector<int> v2;
+
+	v2.push_back(10);
+	std::cout << v2[0] << std::endl;
+	
+
+
 }

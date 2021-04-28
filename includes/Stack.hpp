@@ -26,7 +26,7 @@ namespace ft
 		size_type size() const;
 		void push(const value_type &value);
 		void pop();
-		friend bool operator==(const Stack &lhs, const Stack &rhs);
+		bool operator==(const Stack &lhs);
 		friend bool operator!=(const Stack &lhs, const Stack &rhs);
 		friend bool operator<(const Stack &lhs, const Stack &rhs);
 		friend bool operator<=(const Stack &lhs, const Stack &rhs);
@@ -100,9 +100,9 @@ namespace ft
 		c.pop_back();
 	}
 	template <typename T, class Container>
-	bool operator==(const Stack<T, Container> &lhs, const Stack<T, Container> &rhs)
+	bool Stack<T, Container>::operator==(const Stack<T, Container> &lhs)
 	{
-		return (lhs.c == rhs.c);
+		return (lhs.c == c);
 	}
 
 	template <typename T, class Container>
