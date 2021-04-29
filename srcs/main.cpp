@@ -419,8 +419,41 @@ std::cout << "\e[35mTaille de la vraie lst2 : " << *--lst2.begin()  << "\e[0m" <
 	ft::Vector<int> v2;
 
 	v2.push_back(10);
-	std::cout << v2[0] << std::endl;
+	v2.push_back(20);
+	v2.push_back(30);
+	v2.push_back(10);
+	v2.push_back(20);
+
+	v2.pop_back();
+	std::cout << v2.front() << " " << v1.max_size() << " " << v2.max_size() << std::endl;
 	
+ft::Vector<int> test_A;
+
+test_A.push_back(1);
+test_A.push_back(2);
+test_A.push_back(3);
+test_A.push_back(4);
+test_A.push_back(5);
+test_A.push_back(6);
+
+ ft::Vector<int>::iterator it_a = test_A.begin();
+
+//std::vector<int>::iterator it_b = test_A.end();
+std::cout << it_a[1] << std::endl;
+it_a++;
+std::cout << it_a[-1] << std::endl;
+
+std::vector<int> vv1(50, 10);
+	std::cout << vv1.capacity() << std::endl;
+// try
+// {
+// 	std::cout << "test b: " << *it_b << std::endl;
+// }
+// catch(const std::exception& e)
+// {
+// 	std::cerr << e.what() << '\n';
+// }
+
 
 
 }

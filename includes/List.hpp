@@ -35,17 +35,17 @@ namespace ft
 	};
 
 	template <typename T>
-	class Iterator
+	class Iterator_l
 	{
 	public:
-		typedef Iterator self_type;
+		typedef Iterator_l self_type;
 		typedef Element<T> value_type;
 		typedef Element<T> &reference;
 		typedef Element<T> *pointer;
 		typedef std::forward_iterator_tag iterator_category;
 		typedef int difference_type;
-		Iterator(pointer ptr) : _ptr(ptr){};
-		Iterator &operator=(Iterator const &ref)
+		Iterator_l(pointer ptr) : _ptr(ptr){};
+		Iterator_l &operator=(Iterator_l const &ref)
 		{
 			_ptr = ref._ptr;
 			return (*this);
@@ -84,17 +84,17 @@ namespace ft
 	};
 
 	template <typename T>
-	class Const_Iterator
+	class Const_Iterator_l
 	{
 	public:
-		typedef Const_Iterator self_type;
+		typedef Const_Iterator_l self_type;
 		typedef Element<T> value_type;
 		typedef Element<T> &reference;
 		typedef Element<T> *pointer;
 		typedef std::forward_iterator_tag iterator_category;
 		typedef int difference_type;
-		Const_Iterator(pointer ptr) : _ptr(ptr){};
-		Const_Iterator &operator=(Const_Iterator const &ref)
+		Const_Iterator_l(pointer ptr) : _ptr(ptr){};
+		Const_Iterator_l &operator=(Const_Iterator_l const &ref)
 		{
 			_ptr = ref._ptr;
 			return (*this);
@@ -133,17 +133,17 @@ namespace ft
 	};
 
 	template <typename T>
-	class Reverse_Iterator
+	class Reverse_Iterator_l
 	{
 	public:
-		typedef Reverse_Iterator self_type;
+		typedef Reverse_Iterator_l self_type;
 		typedef Element<T> value_type;
 		typedef Element<T> &reference;
 		typedef Element<T> *pointer;
 		typedef std::forward_iterator_tag iterator_category;
 		typedef int difference_type;
-		Reverse_Iterator(pointer ptr) : _ptr(ptr){};
-		Reverse_Iterator &operator=(Reverse_Iterator const &ref)
+		Reverse_Iterator_l(pointer ptr) : _ptr(ptr){};
+		Reverse_Iterator_l &operator=(Reverse_Iterator_l const &ref)
 		{
 			_ptr = ref._ptr;
 			return (*this);
@@ -182,17 +182,17 @@ namespace ft
 	};
 
 	template <typename T>
-	class Const_Reverse_Iterator
+	class Const_Reverse_Iterator_l
 	{
 	public:
-		typedef Const_Reverse_Iterator self_type;
+		typedef Const_Reverse_Iterator_l self_type;
 		typedef Element<T> value_type;
 		typedef Element<T> &reference;
 		typedef Element<T> *pointer;
 		typedef std::forward_iterator_tag iterator_category;
 		typedef int difference_type;
-		Const_Reverse_Iterator(pointer ptr) : _ptr(ptr){};
-		Const_Reverse_Iterator &operator=(Const_Reverse_Iterator const &ref)
+		Const_Reverse_Iterator_l(pointer ptr) : _ptr(ptr){};
+		Const_Reverse_Iterator_l &operator=(Const_Reverse_Iterator_l const &ref)
 		{
 			_ptr = ref._ptr;
 			return (*this);
@@ -248,10 +248,10 @@ namespace ft
 		typedef value_type &const_reference;
 		typedef typename Alloc::pointer pointer;
 		typedef typename Alloc::const_pointer const_pointer;
-		typedef Iterator<T> iterator;
-		typedef Const_Iterator<T> const_iterator;
-		typedef Reverse_Iterator<T> reverse_iterator;
-		typedef Const_Reverse_Iterator<T> const_reverse_iterator;
+		typedef Iterator_l<T> iterator;
+		typedef Const_Iterator_l<T> const_iterator;
+		typedef Reverse_Iterator_l<T> reverse_iterator;
+		typedef Const_Reverse_Iterator_l<T> const_reverse_iterator;
 
 		explicit List(const allocator_type &alloc = allocator_type());
 		explicit List(size_type size, const T &val = value_type(), const allocator_type &alloc = allocator_type());
@@ -261,7 +261,7 @@ namespace ft
 		~List();
 		List<T, Alloc> &operator=(List const &ref);
 
-		// Iterator
+		// Iterator_l
 		iterator begin();
 		iterator end();
 		const_iterator begin() const;
@@ -1144,53 +1144,53 @@ namespace ft
 		other._nodes->_prev->_content = static_cast<T>(other._size);
 	}
 
-	//Iterators
+	//Iterator_ls
 	template <class T, class Alloc>
 	typename List<T, Alloc>::iterator List<T, Alloc>::begin()
 	{
-		return Iterator<T>(_nodes);
+		return Iterator_l<T>(_nodes);
 	}
 
 	template <class T, class Alloc>
 	typename List<T, Alloc>::iterator List<T, Alloc>::end()
 	{
-		return Iterator<T>(_nodes->_prev);
+		return Iterator_l<T>(_nodes->_prev);
 	}
 
 	template <class T, class Alloc>
 	typename List<T, Alloc>::const_iterator List<T, Alloc>::begin() const
 	{
-		return Const_Iterator<T>(_nodes->_next);
+		return Const_Iterator_l<T>(_nodes->_next);
 	}
 
 	template <class T, class Alloc>
 	typename List<T, Alloc>::const_iterator List<T, Alloc>::end() const
 	{
-		return Const_Iterator<T>(_nodes);
+		return Const_Iterator_l<T>(_nodes);
 	}
 
 	template <class T, class Alloc>
 	typename List<T, Alloc>::reverse_iterator List<T, Alloc>::rbegin()
 	{
-		return Reverse_Iterator<T>(_nodes->_prev->_prev);
+		return Reverse_Iterator_l<T>(_nodes->_prev->_prev);
 	}
 
 	template <class T, class Alloc>
 	typename List<T, Alloc>::reverse_iterator List<T, Alloc>::rend()
 	{
-		return Reverse_Iterator<T>(_nodes->_prev);
+		return Reverse_Iterator_l<T>(_nodes->_prev);
 	}
 
 	template <class T, class Alloc>
 	typename List<T, Alloc>::const_reverse_iterator List<T, Alloc>::rbegin() const
 	{
-		return Const_Reverse_Iterator<T>(_nodes->_prev->_prev);
+		return Const_Reverse_Iterator_l<T>(_nodes->_prev->_prev);
 	}
 
 	template <class T, class Alloc>
 	typename List<T, Alloc>::const_reverse_iterator List<T, Alloc>::rend() const
 	{
-		return Const_Reverse_Iterator<T>(_nodes->_prev);
+		return Const_Reverse_Iterator_l<T>(_nodes->_prev);
 	}
 
 	template <class T, class Alloc>
