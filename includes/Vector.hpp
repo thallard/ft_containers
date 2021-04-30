@@ -44,14 +44,14 @@ namespace ft
 		~Vector();
 
 		// Iterators
-		iterator begin();
-		iterator end();
-		const_iterator begin() const;
-		const_iterator end() const;
-		reverse_iterator rend();
-		reverse_iterator rbegin();
-		const_reverse_iterator rbegin() const;
-		const_reverse_iterator rend() const;
+		iterator begin();					   //
+		iterator end();						   //
+		const_iterator begin() const;		   //
+		const_iterator end() const;			   //
+		reverse_iterator rend();			   //
+		reverse_iterator rbegin();			   //
+		const_reverse_iterator rbegin() const; //
+		const_reverse_iterator rend() const;   //
 
 		// Capacity
 		size_type size() const;									 //
@@ -75,7 +75,7 @@ namespace ft
 		void assign(iterator first, iterator last);
 		void assign(size_type n, const value_type &val);
 		void push_back(const value_type &val); //
-		void pop_back(); //
+		void pop_back();					   //
 		iterator insert(iterator position, const value_type &val);
 		void insert(iterator position, size_type n, const value_type &val);
 		void insert(iterator position, iterator first, iterator last);
@@ -97,9 +97,9 @@ namespace ft
 
 	// Alloc and default constructor
 	template <typename T, class Alloc>
-	Vector<T, Alloc>::Vector(const allocator_type &alloc) : _size(2), _count(0), _alloc(alloc)
+	Vector<T, Alloc>::Vector(const allocator_type &alloc) : _size(0), _count(0), _alloc(alloc)
 	{
-		_array = reinterpret_cast<T *>(_alloc.allocate(sizeof(T *) * _size));
+		_array = reinterpret_cast<T *>(_alloc.allocate(sizeof(T *) * 2));
 	}
 
 	// Fill constructor
@@ -122,34 +122,62 @@ namespace ft
 	template <typename T, class Alloc>
 	void Vector<T, Alloc>::push_back(const value_type &val)
 	{
-		if (_count + 1 > _size)
+		dprintf(1, "\e[91mval en entree de push back  et la size %d %lu\e[0m\n", val, _size);
+		if (!_size)
 		{
-			T save[_size];
-			size_t save_size = _size;
-			for (size_t i = 0; i < _size; i++)
+			_size = 2;
+			_array = reinterpret_cast<T *>(_alloc.allocate(sizeof(T *) * _size));
+				dprintf(1, "debug size %lu et count %lu\n", _size, _count);
+			_array[_count++] = val;
+		}
+		else if (_count + 1 > _size)
+		{
+			T save[_count];
+			size_t save_size = _count;
+			for (size_t i = 0; i < _count; i++)
+			{
 				save[i] = _array[i];
+				dprintf(1, "debug de save = %d\n", save[i]);
+			}
 			_alloc.deallocate(_array, sizeof(T *) * _size);
 			_size = _size * _size;
+			dprintf(1, "debug size %lu et count %lu\n", _size, _count);
 			_array = reinterpret_cast<T *>(_alloc.allocate(sizeof(T *) * _size));
 			for (size_t i = 0; i < save_size; i++)
+			{
 				_array[i] = save[i];
+				dprintf(1, "content de array = %d\n", _array[i]);
+			}
 			_array[_count++] = val;
 		}
 		else
+		{
+			dprintf(1, "\e[92mval en entree de push back  et la size %d %lu\e[0m\n", val, _size);
 			_array[_count++] = val;
+		}
 	}
 
 	// Modifiers pop_back
 	template <typename T, class Alloc>
 	void Vector<T, Alloc>::pop_back()
 	{
-		if (_size < 0)
+		if (_size <= 0)
+		{
+			dprintf(1, "ici\n");
 			return;
+		}
+
 		T save[_size];
 		for (size_t i = 0; i < _size; i++)
 			save[i] = _array[i];
 		_alloc.deallocate(_array, sizeof(T *) * _size);
 		_size--;
+	
+		if (_count - 1 == 0 || !_count)
+			_count = 0;
+		else
+			_count--;
+
 		_array = reinterpret_cast<T *>(_alloc.allocate(sizeof(T *) * _size));
 		for (size_t i = 0; i < _size; i++)
 			_array[i] = save[i];
@@ -308,6 +336,60 @@ namespace ft
 		return (_count == 0);
 	}
 
+	// Erase position
+	template <typename T, class Alloc>
+	typename Vector<T, Alloc>::iterator Vector<T, Alloc>::erase(iterator position)
+	{
+		T _tmp[--_count];
+		iterator tmp = begin();
+		iterator save = tmp;
+		size_t count = _count - 1;
+		int i = -1;
+		while (tmp != end())
+		{
+			if (tmp != position)
+				_tmp[++i] = *tmp;
+			else
+				save = tmp + 1;
+			tmp++;
+		}
+		if (position != end())
+			_tmp[++i] = *tmp;
+		iterator beg = begin();
+		while (beg != end() && _size > 0)
+		{
+			pop_back();
+			beg++;
+		}
+		for (size_t it = 0; it <= count; it++)
+			push_back(_tmp[it]);
+		return (save);
+	}
+
+	// Modifiers erase range
+	template <typename T, class Alloc>
+	typename Vector<T, Alloc>::iterator Vector<T, Alloc>::erase(iterator start, iterator stop)
+	{
+		iterator tmp = start();
+		size_t count = 0;
+		while (tmp != stop)
+		{
+			count++;
+			tmp++;
+		}
+		resize(_count - count);
+		tmp = begin();
+		while (tmp != end())
+		{
+			if (tmp == start)
+				while (tmp != stop)
+					tmp++;
+			push_back(*tmp);
+			tmp++;
+		}
+		return (stop);
+	}
+
 	// New exception out of bounds
 	template <typename T, class Alloc>
 	const char *Vector<T, Alloc>::OutOfRange::what() const throw()
@@ -320,7 +402,7 @@ namespace ft
 		return "\e[91mft::Vector error : Length error!\e[0m";
 	}
 
-		//Iterators
+	//Iterators
 	template <class T, class Alloc>
 	typename Vector<T, Alloc>::iterator Vector<T, Alloc>::begin()
 	{

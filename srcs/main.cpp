@@ -7,12 +7,15 @@
 #include <iterator>
 #include <vector>
 
-bool not_single_digit (const int& value) { return (value>9); }
+bool not_single_digit(const int &value) { return (value > 9); }
 
-bool abso_equal(const int &a, const int &b) { return (a == b ? true : a == -b ? true : false); }
+bool abso_equal(const int &a, const int &b) { return (a == b ? true : a == -b ? true
+																			  : false); }
 
-bool mycomparison (double first, double second)
-{ return ( int(first)<int(second) ); }
+bool mycomparison(double first, double second)
+{
+	return (int(first) < int(second));
+}
 
 int main()
 {
@@ -31,20 +34,20 @@ int main()
 
 	A.sort();
 	B.sort();
-	 ft::List<int>::iterator C_begin = A.begin();
-	 ft::List<int>::iterator C_end = A.end();
-	 std::list<int>::iterator D_begin = B.begin();
-	 std::list<int>::iterator D_end = B.end();
-	 while (C_begin != C_end)
-	 {
-		 std::cout << "my sort: " << *C_begin << std::endl;
-		 C_begin++;
-	 }
-	 	 while (D_begin != D_end)
-	 {
-		 std::cout << "your sort: " << *D_begin << std::endl;
-		 D_begin++;
-	 }
+	ft::List<int>::iterator C_begin = A.begin();
+	ft::List<int>::iterator C_end = A.end();
+	std::list<int>::iterator D_begin = B.begin();
+	std::list<int>::iterator D_end = B.end();
+	while (C_begin != C_end)
+	{
+		std::cout << "my sort: " << *C_begin << std::endl;
+		C_begin++;
+	}
+	while (D_begin != D_end)
+	{
+		std::cout << "your sort: " << *D_begin << std::endl;
+		D_begin++;
+	}
 	// size_t size = 5;
 	// int val = 100;
 	ft::List<int> newList(3, 42);
@@ -61,41 +64,39 @@ int main()
 	newList.push_back(40);
 	while (cpy1 != cpy2)
 	{
-		std::cout << "\e[91mContent : " << *cpy1  << "\e[0m" <<std::endl;
+		std::cout << "\e[91mContent : " << *cpy1 << "\e[0m" << std::endl;
 		cpy1++;
 	}
-					// ft::List<int>::reverse_iterator rcpy1 = copy.rbegin();
-					// ft::List<int>::reverse_iterator rcpy2 = copy.rend();
-					// while (rcpy1 != rcpy2)
-					// {
-					// 	std::cout << "\e[95mReverse Content : " << *rcpy1  << "\e[0m" <<std::endl;
-					// 	rcpy1++;
-					// }
-	std::cout<< "size: " <<  newList.size() << " -- max_size: " << newList.max_size() << std::endl;
+	// ft::List<int>::reverse_iterator rcpy1 = copy.rbegin();
+	// ft::List<int>::reverse_iterator rcpy2 = copy.rend();
+	// while (rcpy1 != rcpy2)
+	// {
+	// 	std::cout << "\e[95mReverse Content : " << *rcpy1  << "\e[0m" <<std::endl;
+	// 	rcpy1++;
+	// }
+	std::cout << "size: " << newList.size() << " -- max_size: " << newList.max_size() << std::endl;
 	// std::cout << "\n\n";
 
 	// if (*it2 == int())
 	// 	printf("oui\n");
-
 
 	// newList.push_front(999);
 
 	// newList.push_back(666);
 	//newList.pop_back();
 	//newList.pop_front();
-	std::cout << "\e[35mSize depuis begin de fill: "<< *(newList.end()) << std::endl;
+	std::cout << "\e[35mSize depuis begin de fill: " << *(newList.end()) << std::endl;
 	//newList.reverse();
-	
+
 	ft::List<int>::iterator it = newList.begin();
 	ft::List<int>::iterator itend = newList.end();
 	// ft::List<int> range(it, itend);
 	while (it != itend)
 	{
-		std::cout << "\e[35mContent : " << *it  << "\e[0m" <<std::endl;
+		std::cout << "\e[35mContent : " << *it << "\e[0m" << std::endl;
 		it++;
 	}
-		std::cout << "\e[35mEnd de la list fill : " << *newList.end() << "\e[0m\n";
-
+	std::cout << "\e[35mEnd de la list fill : " << *newList.end() << "\e[0m\n";
 
 	// ft::List<int>::iterator ite = range.begin();
 	// ft::List<int>::iterator itende = range.end();
@@ -107,14 +108,12 @@ int main()
 	// }
 	// std::cout << "\e[34mEnd de la list range : " << *range.end() << "\e[0m\n";
 
-
 	// std::cout << "\nReverse_Iterator: " << std::endl;
 	// ft::List<int>::reverse_iterator roui = newList.rbegin();
 	// ft::List<int>::reverse_iterator rbase = roui.base();
 	// std::cout << "roui: " <<  *roui << " rbase: " << *rbase << std::endl;
 
 	std::cout << newList.front() << " " << newList.back() << std::endl;
-
 
 	std::cout << "Real: " << std::endl;
 	std::list<int> realList(5, 100);
@@ -123,11 +122,9 @@ int main()
 	// std::list<int>::iterator itend20 = copy1.end();
 	// it20++;
 	// realList.insert(it20, 3, 52);
-	std::cout<< "size: " << realList.size() << " -- max_size: " << realList.max_size() << std::endl;
+	std::cout << "size: " << realList.size() << " -- max_size: " << realList.max_size() << std::endl;
 
 	// std::cout << "le end " << *(++(++(++(realList.end())))) << std::endl;
-
-
 
 	// realList.push_front(999);
 	// realList.push_back(666);
@@ -135,7 +132,7 @@ int main()
 	std::list<int>::iterator non = realList.end();
 	//realList.reverse();
 
-std::cout <<"begin de la real :" << *(--realList.begin()) << std::endl;
+	std::cout << "begin de la real :" << *(--realList.begin()) << std::endl;
 
 	ft::List<int> test(2, 100);
 	std::list<int> test2(2, 100);
@@ -146,7 +143,6 @@ std::cout <<"begin de la real :" << *(--realList.begin()) << std::endl;
 	ft::List<int>::iterator test1 = test.begin();
 	ft::List<int>::iterator test10 = test.end();
 
-
 	// std::list<int>::iterator ref20 = ref2.begin();
 	// std::list<int>::iterator ref200 = ref2.end();
 
@@ -156,36 +152,32 @@ std::cout <<"begin de la real :" << *(--realList.begin()) << std::endl;
 	// test2.insert(test2.begin(), ref20, ref200);
 	std::list<int>::iterator test20 = test2.begin();
 	std::list<int>::iterator test200 = test2.end();
-	
+
 	while (test1 != test10)
 	{
-		std::cout << "\e[91mContent de la notre: " << *test1  << "\e[0m" <<std::endl;
+		std::cout << "\e[91mContent de la notre: " << *test1 << "\e[0m" << std::endl;
 		test1++;
 	}
 	while (test20 != test200)
 	{
-		 	std::cout << "\e[34mContent de la real: " << *test20  << "\e[0m" <<std::endl;
+		std::cout << "\e[34mContent de la real: " << *test20 << "\e[0m" << std::endl;
 		test20++;
 	}
 	while (oui != non)
 	{
-		 	std::cout << "\e[92mContent : " << *oui  << "\e[0m" <<std::endl;
+		std::cout << "\e[92mContent : " << *oui << "\e[0m" << std::endl;
 		oui++;
 	}
-	std::cout <<"bite" << *oui << std::endl;
+	std::cout << "bite" << *oui << std::endl;
 	std::cout << *realList.end() << std::endl;
 	// std::list<int>::reverse_iterator rnon = realList.rbegin();
 	// std::list<int>::reverse_iterator rnon2 = rnon[2];
 	// std::cout << *rnon2 << std::endl;
 
-
 	// std::cout << "\n\n\e[96mERASE TEST OMG\n\n";
-
 
 	// ft::List<int> list1(5, 10);
 	// std::list<int> list2(5, 10);
-
-
 
 	// list1.erase(--(--list1.end()));
 	// list2.erase(--(--list2.end()));
@@ -198,7 +190,7 @@ std::cout <<"begin de la real :" << *(--realList.begin()) << std::endl;
 	// 	std::cout << "\e[34mContent : " << *it10  << "\e[0m" <<std::endl;
 	// 	it10++;
 	// }
-	
+
 	// std::list<int>::iterator it1 = list2.begin();
 	// std::list<int>::iterator it2 = list2.end();
 	// while (it1 != it2)
@@ -207,13 +199,12 @@ std::cout <<"begin de la real :" << *(--realList.begin()) << std::endl;
 	// 	it1++;
 	// }
 
-
 	// list1.erase(++(++list1.begin()), (--list1.end()));
 
 	// std::list<int>::iterator real_begin = list2.begin();
 	// std::list<int>::iterator real_end = list2.end();
 	// list2.erase(++(++list2.begin()), (--list2.end()));
-		
+
 	// while (fake_begin != fake_end)
 	// {
 	// 	std::cout << "\e[91mContent: " << *fake_begin << std::endl;
@@ -258,7 +249,6 @@ std::cout <<"begin de la real :" << *(--realList.begin()) << std::endl;
 
 	// fake_begin = lst1.begin();
 
-
 	// if (fake_begin == fake_end)
 	// 	std::cout << "\e[92mNo content left\e[0m" << std::endl;
 	// while (fake_begin != fake_end)
@@ -267,7 +257,6 @@ std::cout <<"begin de la real :" << *(--realList.begin()) << std::endl;
 	// 	fake_begin++;
 	// }
 	// std::cout << "\e[0m";
-
 
 	// std::cout << "Real Remove" << std::endl;
 	// std::list<int> lst4(5, 10);
@@ -317,7 +306,6 @@ std::cout <<"begin de la real :" << *(--realList.begin()) << std::endl;
 	// first.push_back (5);
 	// first.push_back (1);
 
-	
 	// second.push_back (2);
 	// second.push_back (4);
 	// second.push_back (6);
@@ -340,13 +328,11 @@ std::cout <<"begin de la real :" << *(--realList.begin()) << std::endl;
 	// ft::List<int> first2(1, 3);
 	// ft::List<int> second2(1, 6);
 
-
 	// first2.push_back (5);
 	// first2.push_back (1);
 
 	// second2.push_back (2);
 	// second2.push_back (4);
-
 
 	// first2.splice(--(--first2.end()), second2);
 	// std::cout << "first contains:";
@@ -358,11 +344,11 @@ std::cout <<"begin de la real :" << *(--realList.begin()) << std::endl;
 	std::list<int> lst2(6, 42);
 	ft::List<int> ls1(5, 100);
 	ft::List<int> ls2(6, 42);
-	lst1.splice(--(--lst1.end()), lst2,  ++lst2.begin(), --lst2.end());
+	lst1.splice(--(--lst1.end()), lst2, ++lst2.begin(), --lst2.end());
 	ls1.splice(--(--ls1.end()), ls2, ++ls2.begin(), --ls2.end());
 
 	ft::List<int>::iterator it1 = ls1.begin();
-	ft::List<int>::iterator end1 =  ls1.end();
+	ft::List<int>::iterator end1 = ls1.end();
 
 	ft::List<int>::iterator it2 = ls2.begin();
 	ft::List<int>::iterator end2 = ls2.end();
@@ -373,38 +359,36 @@ std::cout <<"begin de la real :" << *(--realList.begin()) << std::endl;
 	std::list<int>::iterator it20 = lst2.begin();
 	std::list<int>::iterator end20 = lst2.end();
 
-	std::cout << "\e[35mTaille de la notre ls1 : " << *--ls1.begin()  << "\e[0m" <<std::endl;
+	std::cout << "\e[35mTaille de la notre ls1 : " << *--ls1.begin() << "\e[0m" << std::endl;
 	while (it1 != end1)
 	{
-		std::cout << "\e[35mContent de la notre ls1 : " << *it1  << "\e[0m" <<std::endl;
+		std::cout << "\e[35mContent de la notre ls1 : " << *it1 << "\e[0m" << std::endl;
 		it1++;
 	}
-	std::cout << "\e[35mTaille de la notre ls2 : " << *--ls2.begin()  << "\e[0m" <<std::endl;
+	std::cout << "\e[35mTaille de la notre ls2 : " << *--ls2.begin() << "\e[0m" << std::endl;
 	while (it2 != end2)
 	{
-		std::cout << "\e[35mContent de la notre ls2 : " << *it2  << "\e[0m" <<std::endl;
+		std::cout << "\e[35mContent de la notre ls2 : " << *it2 << "\e[0m" << std::endl;
 		it2++;
 	}
-std::cout << "\e[35mTaille de la vraie lst1 : " << *--lst1.begin()  << "\e[0m" <<std::endl;
-		while (it10 != end10)
+	std::cout << "\e[35mTaille de la vraie lst1 : " << *--lst1.begin() << "\e[0m" << std::endl;
+	while (it10 != end10)
 	{
-		std::cout << "\e[91mContent de la vraie lst1 : " << *it10  << "\e[0m" <<std::endl;
+		std::cout << "\e[91mContent de la vraie lst1 : " << *it10 << "\e[0m" << std::endl;
 		it10++;
 	}
-std::cout << "\e[35mTaille de la vraie lst2 : " << *--lst2.begin()  << "\e[0m" <<std::endl;
-		while (it20 != end20)
+	std::cout << "\e[35mTaille de la vraie lst2 : " << *--lst2.begin() << "\e[0m" << std::endl;
+	while (it20 != end20)
 	{
-		std::cout << "\e[91mContent de la vraie lst2 : " << *it20  << "\e[0m" <<std::endl;
+		std::cout << "\e[91mContent de la vraie lst2 : " << *it20 << "\e[0m" << std::endl;
 		it20++;
 	}
-
-
 
 	ft::Stack<int> s1;
 	std::stack<int> s2;
 	s1.push(20);
 	s2.push(20);
-		std::cout << s1.top() << " " << s2.top() << std::endl;
+	std::cout << s1.top() << " " << s2.top() << std::endl;
 	s1.push(30);
 	s2.push(30);
 	std::cout << s1.top() << " " << s2.top() << std::endl;
@@ -414,7 +398,7 @@ std::cout << "\e[35mTaille de la vraie lst2 : " << *--lst2.begin()  << "\e[0m" <
 	std::cout << s1.top() << " " << s2.top() << std::endl;
 	s1.pop();
 	s2.pop();
-// std::cout << s2.top() << " " << s2.top() << std::endl;
+	// std::cout << s2.top() << " " << s2.top() << std::endl;
 	std::vector<int> v1;
 	ft::Vector<int> v2;
 
@@ -425,35 +409,33 @@ std::cout << "\e[35mTaille de la vraie lst2 : " << *--lst2.begin()  << "\e[0m" <
 	v2.push_back(20);
 
 	v2.pop_back();
-	std::cout << v2.front() << " " << v1.max_size() << " " << v2.max_size() << std::endl;
-	
-ft::Vector<int> test_A;
 
-test_A.push_back(1);
-test_A.push_back(2);
-test_A.push_back(3);
-test_A.push_back(4);
-test_A.push_back(5);
-test_A.push_back(6);
+	// std::cout << v2.front() << " " << v1.max_size() << " " << v2.max_size() << std::endl;
 
- ft::Vector<int>::iterator it_a = test_A.begin();
+	ft::Vector<int> test_A;
+	test_A.push_back(1);
 
-//std::vector<int>::iterator it_b = test_A.end();
-std::cout << it_a[1] << std::endl;
-it_a++;
-std::cout << it_a[-1] << std::endl;
+	ft::Vector<int>::iterator it_ae = test_A.begin();
+	test_A.erase(it_ae);
 
-std::vector<int> vv1(50, 10);
-	std::cout << vv1.capacity() << std::endl;
-// try
-// {
-// 	std::cout << "test b: " << *it_b << std::endl;
-// }
-// catch(const std::exception& e)
-// {
-// 	std::cerr << e.what() << '\n';
-// }
+	ft::Vector<int>::iterator it_a = test_A.begin();
 
+	ft::Vector<int>::iterator it_b = test_A.end();
+	std::cout << "size: " << test_A.size() << std::endl;
+	while (it_a != it_b)
+	{
+		std::cout << "COntent : " << *(it_a) << std::endl;
+		it_a++;
+	}
 
-
+	// std::vector<int> vv1(50, 10);
+	// 	std::cout << vv1.capacity() << std::endl;
+	// // try
+	// {
+	// 	std::cout << "test b: " << *it_b << std::endl;
+	// }
+	// catch(const std::exception& e)
+	// {
+	// 	std::cerr << e.what() << '\n';
+	// }
 }

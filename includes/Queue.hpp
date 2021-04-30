@@ -1,42 +1,43 @@
 #ifndef QUEUE_HPP
 #define QUEUE_HPP
 #include "List.hpp"
+#include <deque>
 
 namespace ft
 {
 	template <class T, class Container>
 	class Queue;
 
-	template <class T, class Container = ft::List<T> >
+	template <class T, class Container = std::deque<T> >
 	class Queue
 	{
-	public:
-		typedef Container container_type;
-		typedef typename Container::value_type value_type;
-		typedef typename Container::size_type size_type;
+		public:
+			typedef Container container_type;
+			typedef typename Container::value_type value_type;
+			typedef typename Container::size_type size_type;
 
-		explicit Queue(const Container &cont = Container());
-		Queue(const Queue &other);
-		~Queue();
-		Queue &operator=(const Queue &other);
+			explicit Queue(const Container &cont = Container());
+			Queue(const Queue &other);
+			~Queue();
+			Queue &operator=(const Queue &other);
 
-		value_type &front();
-		value_type &back();
-		const value_type &front() const;
-		const value_type &back() const;
-		bool empty() const;
-		size_type size() const;
-		void push(const value_type &value);
-		void pop();
-		friend bool operator==(const Queue &lhs, const Queue &rhs);
-		friend bool operator!=(const Queue &lhs, const Queue &rhs);
-		friend bool operator<(const Queue &lhs, const Queue &rhs);
-		friend bool operator<=(const Queue &lhs, const Queue &rhs);
-		friend bool operator>(const Queue &lhs, const Queue &rhs);
-		friend bool operator>=(const Queue &lhs, const Queue &rhs);
+			value_type &front();
+			value_type &back();
+			const value_type &front() const;
+			const value_type &back() const;
+			bool empty() const;
+			size_type size() const;
+			void push(const value_type &value);
+			void pop();
+			bool operator==(const Queue &other);
+			bool operator!=(const Queue &other);
+			bool operator<(const Queue &other);
+			bool operator<=(const Queue &other);
+			bool operator>(const Queue &other);
+			bool operator>=(const Queue &other);
 
-	protected:
-		Container c;
+		protected:
+			container_type c;
 	};
 
 	template <typename T, class Container>
@@ -47,15 +48,15 @@ namespace ft
 	template <typename T, class Container>
 	Queue<T, Container>::Queue(const Queue &other)
 	{
-		if (other == this)
+		if (other.c == this->c)
 			return;
-		c(other.c);
+		c = other.c;
 	}
 
 	template <typename T, class Container>
 	Queue<T, Container> &Queue<T, Container>::operator=(const Queue &other)
 	{
-		if (other == this)
+		if (other.c == this->c)
 			return *this;
 		Queue(other.Queue);
 		return *this;
@@ -114,38 +115,38 @@ namespace ft
 		c.pop_front();
 	}
 	template <typename T, class Container>
-	bool operator==(const Queue<T, Container> &lhs, const Queue<T, Container> &rhs)
+	bool Queue<T, Container>::operator==(const Queue<T, Container> &other)
 	{
-		return (lhs.c == rhs.c);
+		return (c == other.c);
 	}
 
 	template <typename T, class Container>
-	bool operator!=(const Queue<T, Container> &lhs, const Queue<T, Container> &rhs)
+	bool Queue<T, Container>::operator!=(const Queue<T, Container> &other)
 	{
-		return (lhs.c != rhs.c);
+		return (c != other.c);
 	}
 
 	template <typename T, class Container>
-	bool operator<(const Queue<T, Container> &lhs, const Queue<T, Container> &rhs)
+	bool Queue<T, Container>::operator<(const Queue<T, Container> &other)
 	{
-		return (lhs.c < rhs.c);
+		return (c < other.c);
 	}
 
 	template <typename T, class Container>
-	bool operator<=(const Queue<T, Container> &lhs, const Queue<T, Container> &rhs)
+	bool Queue<T, Container>::operator<=(const Queue<T, Container> &other)
 	{
-		return (lhs.c <= rhs.c);
+		return (c <= other.c);
 	}
 
 	template <typename T, class Container>
-	bool operator>(const Queue<T, Container> &lhs, const Queue<T, Container> &rhs)
+	bool Queue<T, Container>::operator>(const Queue<T, Container> &other)
 	{
-		return (lhs.c > rhs.c);
+		return (c > other.c);
 	}
 	template <typename T, class Container>
-	bool operator>=(const Queue<T, Container> &lhs, const Queue<T, Container> &rhs)
+	bool Queue<T, Container>::operator>=(const Queue<T, Container> &other)
 	{
-		return (lhs.c >= rhs.c);
+		return (c >= other.c);
 	}
 }
 

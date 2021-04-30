@@ -256,7 +256,7 @@ public:
 	}
 	reference operator*() { return *_ptr; }
 	pointer operator->() { return _ptr; }
-		bool operator==(const self_type &other) { return _ptr == other._ptr; }
+	bool operator==(const self_type &other) { return _ptr == other._ptr; }
 	bool operator!=(const self_type &other) { return _ptr != other._ptr; }
 	bool operator>=(const self_type &other) { return _ptr >= other._ptr; }
 	bool operator<=(const self_type &other) { return _ptr <= other._ptr; }

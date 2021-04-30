@@ -11,311 +11,311 @@ namespace ft
 	template <typename T>
 	class Element
 	{
-	public:
-		T _content;
-		Element *_next;
-		Element *_prev;
+		public:
+			T _content;
+			Element *_next;
+			Element *_prev;
 
-		Element(const T &cont) : _content(cont), _next(NULL), _prev(NULL) {}
-		Element(Element *pre, const T &cont, Element *next) : _content(cont), _next(next), _prev(pre) {}
-		Element() : _content(T()), _next(NULL), _prev(NULL) {}
-		Element &operator=(const Element &obj)
-		{
-			if (this == &obj)
-				return (*this);
-			return (*new (this) Element(obj));
-		};
-		Element<T> *operator++(int junk)
-		{
-			(void)junk;
-			Element tmp = *this;
-			*this = *this->_next;
-			return tmp;
-		};
+			Element(const T &cont) : _content(cont), _next(NULL), _prev(NULL) {}
+			Element(Element *pre, const T &cont, Element *next) : _content(cont), _next(next), _prev(pre) {}
+			Element() : _content(T()), _next(NULL), _prev(NULL) {}
+			Element &operator=(const Element &obj)
+			{
+				if (this == &obj)
+					return (*this);
+				return (*new (this) Element(obj));
+			};
+			Element<T> *operator++(int junk)
+			{
+				(void)junk;
+				Element tmp = *this;
+				*this = *this->_next;
+				return tmp;
+			};
 	};
 
 	template <typename T>
 	class Iterator_l
 	{
-	public:
-		typedef Iterator_l self_type;
-		typedef Element<T> value_type;
-		typedef Element<T> &reference;
-		typedef Element<T> *pointer;
-		typedef std::forward_iterator_tag iterator_category;
-		typedef int difference_type;
-		Iterator_l(pointer ptr) : _ptr(ptr){};
-		Iterator_l &operator=(Iterator_l const &ref)
-		{
-			_ptr = ref._ptr;
-			return (*this);
-		};
-		self_type operator++()
-		{
-			_ptr = _ptr->_next;
-			return *this;
-		}
-		self_type operator++(int n)
-		{
-			(void)n;
-			self_type i = *this;
-			_ptr = _ptr->_next;
-			return i;
-		}
-		self_type operator--()
-		{
-			_ptr = _ptr->_prev;
-			return *this;
-		}
-		self_type operator--(int n)
-		{
-			(void)n;
-			self_type i = *this;
-			_ptr = _ptr->_prev;
-			return i;
-		}
-		T operator*() { return _ptr->_content; }
-		pointer operator->() { return _ptr; }
-		bool operator==(const self_type &rhs) { return _ptr == rhs._ptr; }
-		bool operator!=(const self_type &rhs) { return _ptr != rhs._ptr; }
+		public:
+			typedef Iterator_l self_type;
+			typedef Element<T> value_type;
+			typedef Element<T> &reference;
+			typedef Element<T> *pointer;
+			typedef std::forward_iterator_tag iterator_category;
+			typedef int difference_type;
+			Iterator_l(pointer ptr) : _ptr(ptr){};
+			Iterator_l &operator=(Iterator_l const &ref)
+			{
+				_ptr = ref._ptr;
+				return (*this);
+			};
+			self_type operator++()
+			{
+				_ptr = _ptr->_next;
+				return *this;
+			}
+			self_type operator++(int n)
+			{
+				(void)n;
+				self_type i = *this;
+				_ptr = _ptr->_next;
+				return i;
+			}
+			self_type operator--()
+			{
+				_ptr = _ptr->_prev;
+				return *this;
+			}
+			self_type operator--(int n)
+			{
+				(void)n;
+				self_type i = *this;
+				_ptr = _ptr->_prev;
+				return i;
+			}
+			T operator*() { return _ptr->_content; }
+			pointer operator->() { return _ptr; }
+			bool operator==(const self_type &rhs) { return _ptr == rhs._ptr; }
+			bool operator!=(const self_type &rhs) { return _ptr != rhs._ptr; }
 
-	private:
-		pointer _ptr;
+		private:
+			pointer _ptr;
 	};
 
 	template <typename T>
 	class Const_Iterator_l
 	{
-	public:
-		typedef Const_Iterator_l self_type;
-		typedef Element<T> value_type;
-		typedef Element<T> &reference;
-		typedef Element<T> *pointer;
-		typedef std::forward_iterator_tag iterator_category;
-		typedef int difference_type;
-		Const_Iterator_l(pointer ptr) : _ptr(ptr){};
-		Const_Iterator_l &operator=(Const_Iterator_l const &ref)
-		{
-			_ptr = ref._ptr;
-			return (*this);
-		};
-		self_type operator++()
-		{
-			_ptr = _ptr->_next;
-			return *this;
-		}
-		self_type operator++(int n)
-		{
-			(void)n;
-			self_type i = *this;
-			_ptr = _ptr->_next;
-			return i;
-		}
-		self_type operator--()
-		{
-			_ptr = _ptr->_prev;
-			return *this;
-		}
-		self_type operator--(int n)
-		{
-			(void)n;
-			self_type i = *this;
-			_ptr = _ptr->_prev;
-			return i;
-		}
-		T operator*() { return _ptr->_content; }
-		pointer operator->() { return _ptr; }
-		bool operator==(const self_type &rhs) { return _ptr == rhs._ptr; }
-		bool operator!=(const self_type &rhs) { return _ptr != rhs._ptr; }
+		public:
+			typedef Const_Iterator_l self_type;
+			typedef Element<T> value_type;
+			typedef Element<T> &reference;
+			typedef Element<T> *pointer;
+			typedef std::forward_iterator_tag iterator_category;
+			typedef int difference_type;
+			Const_Iterator_l(pointer ptr) : _ptr(ptr){};
+			Const_Iterator_l &operator=(Const_Iterator_l const &ref)
+			{
+				_ptr = ref._ptr;
+				return (*this);
+			};
+			self_type operator++()
+			{
+				_ptr = _ptr->_next;
+				return *this;
+			}
+			self_type operator++(int n)
+			{
+				(void)n;
+				self_type i = *this;
+				_ptr = _ptr->_next;
+				return i;
+			}
+			self_type operator--()
+			{
+				_ptr = _ptr->_prev;
+				return *this;
+			}
+			self_type operator--(int n)
+			{
+				(void)n;
+				self_type i = *this;
+				_ptr = _ptr->_prev;
+				return i;
+			}
+			T operator*() { return _ptr->_content; }
+			pointer operator->() { return _ptr; }
+			bool operator==(const self_type &rhs) { return _ptr == rhs._ptr; }
+			bool operator!=(const self_type &rhs) { return _ptr != rhs._ptr; }
 
-	private:
-		pointer _ptr;
+		private:
+			pointer _ptr;
 	};
 
 	template <typename T>
 	class Reverse_Iterator_l
 	{
-	public:
-		typedef Reverse_Iterator_l self_type;
-		typedef Element<T> value_type;
-		typedef Element<T> &reference;
-		typedef Element<T> *pointer;
-		typedef std::forward_iterator_tag iterator_category;
-		typedef int difference_type;
-		Reverse_Iterator_l(pointer ptr) : _ptr(ptr){};
-		Reverse_Iterator_l &operator=(Reverse_Iterator_l const &ref)
-		{
-			_ptr = ref._ptr;
-			return (*this);
-		};
-		self_type operator++()
-		{
-			_ptr = _ptr->_prev;
-			return *this;
-		}
-		self_type operator++(int n)
-		{
-			(void)n;
-			self_type i = *this;
-			_ptr = _ptr->_prev;
-			return i;
-		}
-		self_type operator--()
-		{
-			_ptr = _ptr->_next;
-			return *this;
-		}
-		self_type operator--(int n)
-		{
-			(void)n;
-			self_type i = *this;
-			_ptr = _ptr->_next;
-			return i;
-		}
-		T operator*() { return _ptr->_content; }
-		pointer operator->() { return _ptr; }
-		bool operator==(const self_type &rhs) { return _ptr == rhs._ptr; }
-		bool operator!=(const self_type &rhs) { return _ptr != rhs._ptr; }
+		public:
+			typedef Reverse_Iterator_l self_type;
+			typedef Element<T> value_type;
+			typedef Element<T> &reference;
+			typedef Element<T> *pointer;
+			typedef std::forward_iterator_tag iterator_category;
+			typedef int difference_type;
+			Reverse_Iterator_l(pointer ptr) : _ptr(ptr){};
+			Reverse_Iterator_l &operator=(Reverse_Iterator_l const &ref)
+			{
+				_ptr = ref._ptr;
+				return (*this);
+			};
+			self_type operator++()
+			{
+				_ptr = _ptr->_prev;
+				return *this;
+			}
+			self_type operator++(int n)
+			{
+				(void)n;
+				self_type i = *this;
+				_ptr = _ptr->_prev;
+				return i;
+			}
+			self_type operator--()
+			{
+				_ptr = _ptr->_next;
+				return *this;
+			}
+			self_type operator--(int n)
+			{
+				(void)n;
+				self_type i = *this;
+				_ptr = _ptr->_next;
+				return i;
+			}
+			T operator*() { return _ptr->_content; }
+			pointer operator->() { return _ptr; }
+			bool operator==(const self_type &rhs) { return _ptr == rhs._ptr; }
+			bool operator!=(const self_type &rhs) { return _ptr != rhs._ptr; }
 
-	private:
-		pointer _ptr;
+		private:
+			pointer _ptr;
 	};
 
 	template <typename T>
 	class Const_Reverse_Iterator_l
 	{
-	public:
-		typedef Const_Reverse_Iterator_l self_type;
-		typedef Element<T> value_type;
-		typedef Element<T> &reference;
-		typedef Element<T> *pointer;
-		typedef std::forward_iterator_tag iterator_category;
-		typedef int difference_type;
-		Const_Reverse_Iterator_l(pointer ptr) : _ptr(ptr){};
-		Const_Reverse_Iterator_l &operator=(Const_Reverse_Iterator_l const &ref)
-		{
-			_ptr = ref._ptr;
-			return (*this);
-		};
-		self_type operator++()
-		{
-			_ptr = _ptr->_prev;
-			return *this;
-		}
-		self_type operator++(int n)
-		{
-			(void)n;
-			self_type i = *this;
-			_ptr = _ptr->_prev;
-			return i;
-		}
-		self_type operator--()
-		{
-			_ptr = _ptr->_next;
-			return *this;
-		}
-		self_type operator--(int n)
-		{
-			(void)n;
-			self_type i = *this;
-			_ptr = _ptr->_next;
-			return i;
-		}
-		T operator*() { return _ptr->_content; }
-		pointer operator->() { return _ptr; }
-		bool operator==(const self_type &rhs) { return _ptr == rhs._ptr; }
-		bool operator!=(const self_type &rhs) { return _ptr != rhs._ptr; }
+		public:
+			typedef Const_Reverse_Iterator_l self_type;
+			typedef Element<T> value_type;
+			typedef Element<T> &reference;
+			typedef Element<T> *pointer;
+			typedef std::forward_iterator_tag iterator_category;
+			typedef int difference_type;
+			Const_Reverse_Iterator_l(pointer ptr) : _ptr(ptr){};
+			Const_Reverse_Iterator_l &operator=(Const_Reverse_Iterator_l const &ref)
+			{
+				_ptr = ref._ptr;
+				return (*this);
+			};
+			self_type operator++()
+			{
+				_ptr = _ptr->_prev;
+				return *this;
+			}
+			self_type operator++(int n)
+			{
+				(void)n;
+				self_type i = *this;
+				_ptr = _ptr->_prev;
+				return i;
+			}
+			self_type operator--()
+			{
+				_ptr = _ptr->_next;
+				return *this;
+			}
+			self_type operator--(int n)
+			{
+				(void)n;
+				self_type i = *this;
+				_ptr = _ptr->_next;
+				return i;
+			}
+			T operator*() { return _ptr->_content; }
+			pointer operator->() { return _ptr; }
+			bool operator==(const self_type &rhs) { return _ptr == rhs._ptr; }
+			bool operator!=(const self_type &rhs) { return _ptr != rhs._ptr; }
 
-	private:
-		pointer _ptr;
+		private:
+			pointer _ptr;
 	};
 
 	template <class T, class Alloc = std::allocator<T> >
 	class List : public std::allocator<T>
 	{
-	private:
-		Element<T> *_nodes;
-		size_t _size;
-		size_t _count;
-		Alloc _alloc;
+		private:
+			Element<T> *_nodes;
+			size_t _size;
+			size_t _count;
+			Alloc _alloc;
 
-	public:
-		typedef T value_type;
-		typedef Alloc allocator_type;
-		typedef size_t size_type;
-		typedef ptrdiff_t difference_type;
-		typedef typename Alloc::reference reference;
-		typedef value_type &const_reference;
-		typedef typename Alloc::pointer pointer;
-		typedef typename Alloc::const_pointer const_pointer;
-		typedef Iterator_l<T> iterator;
-		typedef Const_Iterator_l<T> const_iterator;
-		typedef Reverse_Iterator_l<T> reverse_iterator;
-		typedef Const_Reverse_Iterator_l<T> const_reverse_iterator;
+		public:
+			typedef T value_type;
+			typedef Alloc allocator_type;
+			typedef size_t size_type;
+			typedef ptrdiff_t difference_type;
+			typedef typename Alloc::reference reference;
+			typedef value_type &const_reference;
+			typedef typename Alloc::pointer pointer;
+			typedef typename Alloc::const_pointer const_pointer;
+			typedef Iterator_l<T> iterator;
+			typedef Const_Iterator_l<T> const_iterator;
+			typedef Reverse_Iterator_l<T> reverse_iterator;
+			typedef Const_Reverse_Iterator_l<T> const_reverse_iterator;
 
-		explicit List(const allocator_type &alloc = allocator_type());
-		explicit List(size_type size, const T &val = value_type(), const allocator_type &alloc = allocator_type());
-		template <class InputIterator>
-		List(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type());
-		List(List &other);
-		~List();
-		List<T, Alloc> &operator=(List const &ref);
+			explicit List(const allocator_type &alloc = allocator_type());
+			explicit List(size_type size, const T &val = value_type(), const allocator_type &alloc = allocator_type());
+			template <class InputIterator>
+			List(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type());
+			List(List &other);
+			~List();
+			List<T, Alloc> &operator=(List const &ref);
 
-		// Iterator_l
-		iterator begin();
-		iterator end();
-		const_iterator begin() const;
-		const_iterator end() const;
-		reverse_iterator rbegin();
-		reverse_iterator rend();
-		const_reverse_iterator rbegin() const;
-		const_reverse_iterator rend() const;
+			// Iterator_l
+			iterator begin();
+			iterator end();
+			const_iterator begin() const;
+			const_iterator end() const;
+			reverse_iterator rbegin();
+			reverse_iterator rend();
+			const_reverse_iterator rbegin() const;
+			const_reverse_iterator rend() const;
 
-		// Access members
-		reference front();
-		const_reference front() const;
-		reference back();
-		const_reference back() const;
+			// Access members
+			reference front();
+			const_reference front() const;
+			reference back();
+			const_reference back() const;
 
-		// Capacity members
-		bool empty() const;
-		size_type size() const;
-		size_type max_size() const;
+			// Capacity members
+			bool empty() const;
+			size_type size() const;
+			size_type max_size() const;
 
-		// Modifiers members
-		void clear();
-		void assign(size_type n, const value_type &val);
-		void assign(iterator first, iterator last);
-		iterator insert(iterator pos, const T &value);
-		void insert(iterator pos, size_type count, const T &value);
-		void insert(iterator pos, iterator first, iterator last);
-		iterator erase(iterator pos);
-		iterator erase(iterator first, iterator last);
-		void push_back(const T &value);
-		void pop_back();
-		void push_front(const T &value);
-		void pop_front();
-		void resize(size_type count);
-		void swap(List &other);
-		void reverse();
-		void remove(const T &value);
+			// Modifiers members
+			void clear();
+			void assign(size_type n, const value_type &val);
+			void assign(iterator first, iterator last);
+			iterator insert(iterator pos, const T &value);
+			void insert(iterator pos, size_type count, const T &value);
+			void insert(iterator pos, iterator first, iterator last);
+			iterator erase(iterator pos);
+			iterator erase(iterator first, iterator last);
+			void push_back(const T &value);
+			void pop_back();
+			void push_front(const T &value);
+			void pop_front();
+			void resize(size_type count);
+			void swap(List &other);
+			void reverse();
+			void remove(const T &value);
 
-		template <class UnaryPredicate>
-		void remove_if(UnaryPredicate p);
-		void unique();
-		template <class BinaryPredicate>
-		void unique(BinaryPredicate binary_pred);
-		void sort();
-		template <class Compare>
-		void sort(Compare p);
-		void merge(List &x);
-		template <class Compare>
-		void merge(List &x, Compare p);
-		void splice(iterator position, List &x);
-		void splice(iterator pos, List &other, iterator it);
-		void splice(iterator pos, List &other, iterator first, iterator last);
-		
-		friend bool operator==( const List<T, Alloc>& lhs, const List<T, Alloc>& rhs );
+			template <class UnaryPredicate>
+			void remove_if(UnaryPredicate p);
+			void unique();
+			template <class BinaryPredicate>
+			void unique(BinaryPredicate binary_pred);
+			void sort();
+			template <class Compare>
+			void sort(Compare p);
+			void merge(List &x);
+			template <class Compare>
+			void merge(List &x, Compare p);
+			void splice(iterator position, List &x);
+			void splice(iterator pos, List &other, iterator it);
+			void splice(iterator pos, List &other, iterator first, iterator last);
+			
+			friend bool operator==( const List<T, Alloc>& lhs, const List<T, Alloc>& rhs );
 	};
 
 	// Allocator and default constructor

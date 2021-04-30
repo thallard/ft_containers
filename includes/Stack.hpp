@@ -1,40 +1,39 @@
 #ifndef STACK_HPP
 #define STACK_HPP
-#include "List.hpp"
+#include <deque>
 
 namespace ft
 {
 	template <class T, class Container>
 	class Stack;
 
-	template <class T, class Container = ft::List<T> >
+	template <class T, class Container = std::deque<T> >
 	class Stack
 	{
-	public:
-		typedef Container container_type;
-		typedef typename Container::value_type value_type;
-		typedef typename Container::size_type size_type;
+		public:
+			typedef Container container_type;
+			typedef typename Container::value_type value_type;
+			typedef typename Container::size_type size_type;
 
-		explicit Stack(const Container &cont = Container());
-		Stack(const Stack &other);
-		~Stack();
-		Stack &operator=(const Stack &other);
+			explicit Stack(const Container &cont = Container());
+			Stack(const Stack &other);
+			~Stack();
+			Stack &operator=(const Stack &other);
 
-		value_type &top();
-		const value_type &top() const;
-		bool empty() const;
-		size_type size() const;
-		void push(const value_type &value);
-		void pop();
-		bool operator==(const Stack &lhs);
-		friend bool operator!=(const Stack &lhs, const Stack &rhs);
-		friend bool operator<(const Stack &lhs, const Stack &rhs);
-		friend bool operator<=(const Stack &lhs, const Stack &rhs);
-		friend bool operator>(const Stack &lhs, const Stack &rhs);
-		friend bool operator>=(const Stack &lhs, const Stack &rhs);
-
-	protected:
-		Container c;
+			value_type &top();
+			const value_type &top() const;
+			bool empty() const;
+			size_type size() const;
+			void push(const value_type &value);
+			void pop();
+			bool operator==(const Stack &other);
+			bool operator!=(const Stack &other);
+			bool operator<(const Stack &other);
+			bool operator<=(const Stack &other);
+			bool operator>(const Stack &other);
+			bool operator>=(const Stack &other);
+		protected:
+			container_type c;
 	};
 
 	template <typename T, class Container>
@@ -45,15 +44,15 @@ namespace ft
 	template <typename T, class Container>
 	Stack<T, Container>::Stack(const Stack &other)
 	{
-		if (other == this)
+		if (other.c == this->c)
 			return;
-		c(other.c);
+		c = other.c;
 	}
 
 	template <typename T, class Container>
 	Stack<T, Container> &Stack<T, Container>::operator=(const Stack &other)
 	{
-		if (other == this)
+		if (other == *this)
 			return *this;
 		stack(other.stack);
 		return *this;
@@ -100,38 +99,38 @@ namespace ft
 		c.pop_back();
 	}
 	template <typename T, class Container>
-	bool Stack<T, Container>::operator==(const Stack<T, Container> &lhs)
+	bool Stack<T, Container>::operator==(const Stack<T, Container> &other)
 	{
-		return (lhs.c == c);
+		return (other.c == c);
 	}
 
 	template <typename T, class Container>
-	bool operator!=(const Stack<T, Container> &lhs, const Stack<T, Container> &rhs)
+	bool Stack<T, Container>::operator!=(const Stack<T, Container> &other)
 	{
-		return (lhs.c != rhs.c);
+		return (other.c != c);
 	}
 
 	template <typename T, class Container>
-	bool operator<(const Stack<T, Container> &lhs, const Stack<T, Container> &rhs)
+	bool Stack<T, Container>::operator<(const Stack<T, Container> &other)
 	{
-		return (lhs.c < rhs.c);
+		return (c < other.c);
 	}
 
 	template <typename T, class Container>
-	bool operator<=(const Stack<T, Container> &lhs, const Stack<T, Container> &rhs)
+	bool Stack<T, Container>::operator<=(const Stack<T, Container> &other)
 	{
-		return (lhs.c <= rhs.c);
+		return (c <= other.c);
 	}
 
 	template <typename T, class Container>
-	bool operator>(const Stack<T, Container> &lhs, const Stack<T, Container> &rhs)
+	bool Stack<T, Container>::operator>(const Stack<T, Container> &other)
 	{
-		return (lhs.c > rhs.c);
+		return (c > other.c);
 	}
 	template <typename T, class Container>
-	bool operator>=(const Stack<T, Container> &lhs, const Stack<T, Container> &rhs)
+	bool Stack<T, Container>::operator>=(const Stack<T, Container> &other)
 	{
-		return (lhs.c >= rhs.c);
+		return (c >= other.c);
 	}
 }
 
