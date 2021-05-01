@@ -6,7 +6,7 @@
 /*   By: thallard <thallard@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 18:10:53 by thallard          #+#    #+#             */
-/*   Updated: 2021/05/01 23:46:44 by thallard         ###   ########lyon.fr   */
+/*   Updated: 2021/05/02 01:10:35 by thallard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,23 +19,55 @@ namespace ft
     template <class T> struct less : std::binary_function <T,T,bool> {
     bool operator() (const T& x, const T& y) const {return x<y;}
     };
-
+    
+    template <class Key, class T>
+    class pair;
     template <class Key, class T>
     class pair
     {
         protected:
-            Key key;
-            T value;
-            pair *left;
-            pair *right;
+            Key first;
+            T second;
         public:
-            pair() { key = NULL; value = NULL; }
-            pair(Key k, T val) { key = k; value = val; }
+            pair() { first = NULL; second = NULL; }
+            pair(Key k, T val) { first = k; second = val; }
             pair(pair const &);
             pair &operator=(pair const &);
             ~pair();
 
+            // Setters & getters
+            void setVal(const T & val) { second = val; }
+            void setKey(const Key & k) { first = k; }
+            T &getVal() { return second; }
+            Key &getKey() { return first; }
+
     };
+
+    template <class Key, class T>
+    class Node;
+    template <class Key, class T>
+    class Node
+    {
+        protected:
+            ft::pair<Key, T> node;
+            Node *left;
+            Node *right;
+            Node *top;
+        public:
+            Node();
+            ~Node();
+
+            // Setters & getters
+            ft::pair<Key, T> &getNode() { return node; }
+            void setNode(Key const &k, T const & val) {  node.setKey(k); node.setVal(val); }
+            void setValue(const T &val) { node.setVal(val); }
+            void setKey(const Key &k) { node.setKey(k); }
+    };
+
+    // class Iterator
+    // {
+
+    // };
     template <class Key, class T, class Compare, class Alloc>
     class Map;
 
@@ -45,7 +77,7 @@ namespace ft
         public:
             typedef Key key_type; //	The first template parameter (Key)	
             typedef T mapped_type; //	The second template parameter (T)	
-            typedef pair<const key_type,mapped_type> value_type; //	
+            typedef ft::pair<const key_type, mapped_type> value_type; //	
             typedef Compare key_compare; //	The third template parameter (Compare)	defaults to: less<key_type>
             typedef T value_compare; //	Nested function class to compare elements	see value_comp
             typedef Alloc allocator_type; //	The fourth template parameter (Alloc)	defaults to: allocator<value_type>
@@ -60,7 +92,7 @@ namespace ft
             typedef ptrdiff_t difference_type;	// a signed integral type, identical to: iterator_traits<iterator>::difference_type	usually the same as ptrdiff_t
             typedef size_t size_type;	// an unsigned integral type that can represent any non-negative value of difference_type	usually the same as size_t
         private:
-            value_type      *_pairs;
+            Node<Key, T>     *_nodes;
             allocator_type  _alloc;
             key_compare     _comp;
             size_t          _size;
@@ -76,20 +108,27 @@ namespace ft
 
             // Modifiers functions
             // pair<iterator,bool> insert (const value_type& val);
+
+            // Operations functions
+            T &find (const key_type& k);
     };
 
      // A SUPPRIMER DEBUG FUNCTION 
     template <typename Key, typename T, class Compare, class Alloc>
     void Map<Key, T, Compare, Alloc>::print()
     {
-
     }
 
     // Default constructor
     template <typename Key, typename T, class Compare, class Alloc>
-    Map<Key, T, Compare, Alloc>::Map(const key_compare& comp, const allocator_type& alloc) : _pairs(NULL), _alloc(alloc), _comp(comp), _size(0)
+    Map<Key, T, Compare, Alloc>::Map(const key_compare& comp, const allocator_type& alloc) : _nodes(NULL), _alloc(alloc), _comp(comp), _size(0)
     {
-        _pairs = reinterpret_cast<value_type*>(_alloc.allocate(sizeof(value_type*)));
+        _nodes = reinterpret_cast<Node<Key, T>*>(_alloc.allocate(sizeof(value_type*)));
+        _nodes->setKey("Start");
+        _nodes->setValue(10);
+        // _nodes->left->setNode(NULL, T());
+        // _nodes->right = NULL;
+        dprintf(1, "%d\n", _nodes->getNode().getVal());
     }
 
     // Destructor
@@ -98,6 +137,12 @@ namespace ft
     {
         
     }
+
+     template <typename Key, typename T, class Compare, class Alloc>
+     T &Map<Key, T, Compare, Alloc>::find(const key_type& k)
+     {
+         
+     }
 
     // template <typename Key, typename T, class Compare, class Alloc>
     // pair<iterator,bool>  Map<Key, T, Compare, Alloc>::insert (const value_type& val)

@@ -1,11 +1,13 @@
 #include "../includes/List.hpp"
 #include "../includes/Stack.hpp"
 #include "../includes/Vector.hpp"
+#include "../includes/Map.hpp"
 #include <list>
 #include <stack>
 #include <queue>
 #include <iterator>
 #include <vector>
+#include <map>
 
 bool not_single_digit(const int &value) { return (value > 9); }
 
@@ -401,16 +403,14 @@ int main()
 	// std::cout << s2.top() << " " << s2.top() << std::endl;
 	std::vector<int> v1;
 	ft::Vector<int> v2;
+v1.push_back(1);
+	v1.push_back(2);
+	v1.push_back(3);
+	v1.push_back(4);
+	v1.push_back(5);
+	v1.push_back(6);
 
-	v2.push_back(10);
-	v2.push_back(20);
-	v2.push_back(30);
-	v2.push_back(10);
-	v2.push_back(20);
-
-	v2.pop_back();
-
-	// std::cout << v2.front() << " " << v1.max_size() << " " << v2.max_size() << std::endl;
+	// std::cout << v1.front() << " " << v1.max_size() << " " << v1.max_size() << std::endl;
 
 	ft::Vector<int> test_A;
 	test_A.push_back(1);
@@ -420,23 +420,36 @@ int main()
 	test_A.push_back(5);
 	test_A.push_back(6);
 
-	ft::Vector<int>::iterator it_ae = test_A.end();
-	it_ae--;
-	it_ae--;
+	ft::Vector<int>::iterator it_ae = test_A.begin();
 	std::cout << "Regarde dans le terminal la valeur par rapport au push back au dessus :" 
 			<< *it_ae << std::endl;
-	test_A.erase(++(test_A.begin()), it_ae );
-
+	// test_A.erase(it_ae);
+	v1.insert(++v1.begin(),5, 42);
+	it_ae++;
+	it_ae++;
+	test_A.insert(++test_A.begin(),5, 42);
+	std::vector<int>::iterator i1 = v1.begin();
+	std::vector<int>::iterator i2 = v1.end();
+	while (i1 != i2)
+	{
+		std::cout << "Content : " << *(i1) << std::endl;
+		i1++;
+	}
 	ft::Vector<int>::iterator it_a = test_A.begin();
 
 	ft::Vector<int>::iterator it_b = test_A.end();
 	std::cout << "size: " << test_A.size() << std::endl;
 	while (it_a != it_b)
 	{
-		std::cout << "Content : " << *(it_a) << std::endl;
+		std::cout << "\e[35mContent : " << *(it_a) << "\e[0m" << std::endl;
 		it_a++;
 	}
 
+	std::map<std::string, int> map1;
+	ft::Map<std::string, int> map2;
+	map1.insert(map1.begin(), std::pair<std::string, int>("oui", 1));
+	// std::map<std::string, int>::iterator it2020 = map1.begin();
+	std::cout << "value de map begin" << map1.at("oui") << std::endl;
 	// std::vector<int> vv1(50, 10);
 	// 	std::cout << vv1.capacity() << std::endl;
 	// // try
