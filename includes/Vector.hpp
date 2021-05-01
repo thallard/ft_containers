@@ -35,13 +35,13 @@ namespace ft
 
 	public:
 		// Members functions
-		explicit Vector(const allocator_type &alloc = allocator_type());
-		explicit Vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type());
+		explicit Vector(const allocator_type &alloc = allocator_type()); //
+		explicit Vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type()); //
 		template <class InputIterator>
-		Vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type());
-		Vector(const Vector &v);
-		Vector &operator=(const Vector &v);
-		~Vector();
+		Vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type()); //
+		Vector(const Vector &v); //
+		Vector &operator=(const Vector &v); //
+		~Vector(); //
 
 		// Iterators
 		iterator begin();					   //
@@ -76,9 +76,9 @@ namespace ft
 		void assign(size_type n, const value_type &val); //
 		void push_back(const value_type &val); //
 		void pop_back();					   //
-		iterator insert(iterator position, const value_type &val);
-		void insert(iterator position, size_type n, const value_type &val);
-		void insert(iterator position, iterator first, iterator last);
+		iterator insert(iterator position, const value_type &val); //
+		void insert(iterator position, size_type n, const value_type &val); //
+		void insert(iterator position, iterator first, iterator last); //
 		iterator erase(iterator position); //
 		iterator erase(iterator first, iterator last); //
 		void swap(Vector &x); //
@@ -109,6 +109,34 @@ namespace ft
 		_array = reinterpret_cast<T *>(_alloc.allocate(sizeof(T *) * _size));
 		for (_count = 0; _count < n; _count++)
 			_array[_count] = val;
+	}
+
+	// Range constructor
+	template <typename T, class Alloc>
+	template <class InputIterator>
+	Vector<T, Alloc>::Vector(InputIterator first, InputIterator last, const allocator_type &alloc) : _alloc(alloc)
+	{
+		insert(begin(), first, last);
+	}
+
+	// Constructor per copy
+	template <typename T, class Alloc>
+	Vector<T, Alloc>::Vector(const Vector &v) : _alloc(v._alloc)
+	{
+		if (*this == v)
+			return ;
+		insert(begin(), v.begin(), v.end());
+	}
+
+
+	// Overload operator=
+	template <typename T, class Alloc>
+	Vector<T, Alloc> &Vector<T, Alloc>::operator=(const Vector &v)
+	{
+		if (*this == v)
+			return *this;
+		this(v);
+		return *this;
 	}
 
 	// Destructor
@@ -352,12 +380,44 @@ namespace ft
 			idx--;
 		}
 		while (n--)
-		push_back(val);
+			push_back(val);
 		for (size_t l = 0; l < i; l++)
 			push_back(save[l]);
 		
 	}
-		// void insert(iterator position, iterator first, iterator last);
+	template <typename T, class Alloc>
+	void Vector<T, Alloc>::insert(iterator position, iterator first, iterator last)
+	{
+		iterator tmp = position;
+		iterator tmp2 = begin();
+		iterator it = first;
+		T save[_size];
+		size_t i = 0;
+		while (tmp != end())
+		{
+			save[i++] = *tmp++;
+		}
+		size_t pos = 0;
+		size_t idx = i;
+		while (tmp2 != position)
+		{
+			pos++;
+			tmp2++;
+		}
+		
+		while (idx)
+		{
+			pop_back();
+			idx--;
+		}
+		while (it != last)
+		{
+			push_back(*it++);
+		}
+		
+		for (size_t l = 0; l < i; l++)
+			push_back(save[l]);
+	}
 
 	// Erase position
 	template <typename T, class Alloc>
