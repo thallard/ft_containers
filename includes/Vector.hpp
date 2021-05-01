@@ -128,7 +128,9 @@ namespace ft
 			_size = 2;
 			_array = reinterpret_cast<T *>(_alloc.allocate(sizeof(T *) * _size));
 				dprintf(1, "debug size %lu et count %lu\n", _size, _count);
-			_array[_count++] = val;
+			_array[_count] = val;
+			_count += 1;
+			dprintf(1, "debug size %lu et count %lu\n", _size, _count);
 		}
 		else if (_count + 1 > _size)
 		{
@@ -152,7 +154,7 @@ namespace ft
 		}
 		else
 		{
-			dprintf(1, "\e[92mval en entree de push back  et la size %d %lu\e[0m\n", val, _size);
+			dprintf(1, "\e[92mval en entree du dernier else de push back  et la size %d %lu\e[0m\n", val, _size);
 			_array[_count++] = val;
 		}
 	}
@@ -340,10 +342,15 @@ namespace ft
 	template <typename T, class Alloc>
 	typename Vector<T, Alloc>::iterator Vector<T, Alloc>::erase(iterator position)
 	{
-		T _tmp[--_count];
+		T _tmp[_count];
 		iterator tmp = begin();
 		iterator save = tmp;
-		size_t count = _count - 1;
+		dprintf(1, "\e[35mCount : %lu\n", _count);
+		size_t count;
+		if (!_count)
+			count = 0;
+		else
+			count = _count - 1;
 		int i = -1;
 		while (tmp != end())
 		{
@@ -353,16 +360,20 @@ namespace ft
 				save = tmp + 1;
 			tmp++;
 		}
-		if (position != end())
-			_tmp[++i] = *tmp;
+		// if (position != end())
+		// 	_tmp[++i] = *tmp;
 		iterator beg = begin();
 		while (beg != end() && _size > 0)
 		{
 			pop_back();
 			beg++;
 		}
-		for (size_t it = 0; it <= count; it++)
+		for (size_t it = 0; it < count; it++)
+		{	
+			dprintf(1, "\e[92mdebug de la value de it = %lu et count = %lu\n", it, count);
 			push_back(_tmp[it]);
+		}
+			
 		return (save);
 	}
 
@@ -370,24 +381,32 @@ namespace ft
 	template <typename T, class Alloc>
 	typename Vector<T, Alloc>::iterator Vector<T, Alloc>::erase(iterator start, iterator stop)
 	{
-		iterator tmp = start();
-		size_t count = 0;
+		iterator tmp = start;
+		// size_t count = 0;
 		while (tmp != stop)
 		{
-			count++;
-			tmp++;
-		}
-		resize(_count - count);
-		tmp = begin();
-		while (tmp != end())
-		{
-			if (tmp == start)
-				while (tmp != stop)
-					tmp++;
-			push_back(*tmp);
+			erase(tmp);
 			tmp++;
 		}
 		return (stop);
+		// while (tmp != stop)
+		// {
+		// 	count++;
+		// 	tmp++;
+		// }
+		// resize(_count - count);
+		// tmp = begin();
+		// while (tmp != end())
+		// {
+		// 	if (tmp == start)
+		// 		while (tmp != stop)
+		// 			tmp++;
+		// 	push_back(*tmp);
+		// 	tmp++;
+		// }
+		// return (stop);
+		// iterator tmp = start;
+
 	}
 
 	// New exception out of bounds

@@ -414,9 +414,18 @@ int main()
 
 	ft::Vector<int> test_A;
 	test_A.push_back(1);
+	test_A.push_back(2);
+	test_A.push_back(3);
+	test_A.push_back(4);
+	test_A.push_back(5);
+	test_A.push_back(6);
 
-	ft::Vector<int>::iterator it_ae = test_A.begin();
-	test_A.erase(it_ae);
+	ft::Vector<int>::iterator it_ae = test_A.end();
+	it_ae--;
+	it_ae--;
+	std::cout << "Regarde dans le terminal la valeur par rapport au push back au dessus :" 
+			<< *it_ae << std::endl;
+	test_A.erase(++(test_A.begin()), it_ae );
 
 	ft::Vector<int>::iterator it_a = test_A.begin();
 
@@ -424,7 +433,7 @@ int main()
 	std::cout << "size: " << test_A.size() << std::endl;
 	while (it_a != it_b)
 	{
-		std::cout << "COntent : " << *(it_a) << std::endl;
+		std::cout << "Content : " << *(it_a) << std::endl;
 		it_a++;
 	}
 
