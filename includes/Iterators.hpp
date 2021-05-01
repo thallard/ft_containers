@@ -19,27 +19,27 @@ public:
 	};
 	self_type operator++()
 	{
-		self_type i = *this;
 		_ptr++;
-		return i;
+		return *this;
 	}
 	self_type operator++(int n)
 	{
 		(void)n;
+		self_type i = *this;
 		++_ptr;
-		return *this;
+		return i;
 	}
 	self_type operator--()
 	{
-		self_type i = *this;
 		_ptr--;
-		return i;
+		return *this;
 	}
 	self_type operator--(int n)
 	{
 		(void)n;
+		self_type i = *this;
 		--_ptr;
-		return *this;
+		return i;
 	}
 	self_type operator+(int n)
 	{
@@ -107,28 +107,28 @@ public:
 	};
 	self_type operator++()
 	{
-		self_type i = *this;
 		_ptr++;
-		return i;
+		return *this;
 	}
 	self_type operator++(int n)
 	{
 		(void)n;
+		self_type i = *this;
 		++_ptr;
-		return *this;
+		return i;
 	}
 
 	self_type operator--()
 	{
-		self_type i = *this;
 		_ptr--;
-		return i;
+		return *this;
 	}
 	self_type operator--(int n)
 	{
 		(void)n;
+		self_type i = *this;
 		--_ptr;
-		return *this;
+		return i;
 	}
 	self_type operator+(int n)
 	{
@@ -196,28 +196,28 @@ public:
 	};
 	self_type operator++()
 	{
-		self_type i = *this;
 		_ptr--;
-		return i;
+		return *this;
 	}
 	self_type operator++(int n)
 	{
 		(void)n;
+		self_type i = *this;
 		--_ptr;
-		return *this;
+		return i;
 	}
 
 	self_type operator--()
 	{
-		self_type i = *this;
 		_ptr++;
-		return i;
+		return *this;
 	}
 	self_type operator--(int n)
 	{
 		(void)n;
+		self_type i = *this;
 		++_ptr;
-		return *this;
+		return i;
 	}
 	self_type operator+(int n)
 	{
@@ -285,27 +285,27 @@ public:
 	};
 	self_type operator++()
 	{
-		self_type i = *this;
 		_ptr--;
-		return i;
+		return *this;
 	}
 	self_type operator++(int n)
 	{
 		(void)n;
+		self_type i = *this;
 		--_ptr;
-		return *this;
+		return i;
 	}
 	self_type operator--()
 	{
-		self_type i = *this;
 		_ptr++;
-		return i;
+		return *this;
 	}
 	self_type operator--(int n)
 	{
 		(void)n;
+		self_type i = *this;
 		++_ptr;
-		return *this;
+		return i;
 	}
 	self_type operator+(int n)
 	{
