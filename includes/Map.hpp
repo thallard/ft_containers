@@ -6,7 +6,7 @@
 /*   By: thallard <thallard@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/01 18:10:53 by thallard          #+#    #+#             */
-/*   Updated: 2021/05/02 02:38:12 by thallard         ###   ########lyon.fr   */
+/*   Updated: 2021/05/02 21:06:56 by thallard         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,21 +25,24 @@ namespace ft
     template <class Key, class T>
     class pair
     {
-        protected:
-            Key first;
-            T second;
+       
+            
         public:
+        Key first;
+            T second;
             pair() { first = NULL; second = NULL; }
-            pair(Key k, T val) { first = k; second = val; }
+            explicit pair(Key k, T val) { first = k; second = val; }
             pair(pair const &);
             pair &operator=(pair const &);
-            ~pair();
+            ~pair() {}
 
             // Setters & getters
             void setVal(const T & val) { second = val; }
             void setKey(const Key & k) { first = k; }
             T &getVal() { return second; }
             Key &getKey() { return first; }
+            const T &getVal() const { return second; }
+            const Key &getKey() const { return first; }
 
     };
 
@@ -76,14 +79,39 @@ namespace ft
            
             bool getIsEnd() { return is_end;}
             void setIsEnd(bool val) { is_end = val; }
-             void setValues(const Key &k, const T &val, bool condi = true) { node.setVal(val); node.setKey(k); setIsEnd(condi); }
+            void setValues(const Key &k, const T &val, bool condi = true) { node.setVal(val); node.setKey(k); setIsEnd(condi); }
             // void createNode();
     };
 
-    // class Iterator
-    // {
+    template <typename Key, typename T>
+    class MapIterator
+    {
+        public:
+            typedef MapIterator self_type;
+            typedef Node<Key, T> node;
 
-    // };
+            MapIterator(Node<Key, T> *p) : _ptr(p) { }
+            ~MapIterator() {}
+            self_type operator++()
+            {
+                _ptr++;
+                return *this;    
+            }
+            self_type operator++(int n)
+            {
+                (void)n;
+                self_type i = *this;
+                ++_ptr;
+                return i;
+            }
+
+            // ft::pair<Key, T> &operator.() { return _ptr->getNode(); }
+            ft::pair<Key, T> &operator->() { return _ptr->getNode(); }
+
+        private:
+            node *_ptr;
+
+    };
     template <class Key, class T, class Compare, class Alloc>
     class Map;
 
@@ -93,7 +121,7 @@ namespace ft
         public:
             typedef Key key_type; //	The first template parameter (Key)	
             typedef T mapped_type; //	The second template parameter (T)	
-            typedef ft::pair<const key_type, mapped_type> value_type; //	
+            typedef ft::pair<key_type, mapped_type> value_type; //	
             typedef ft::Node<Key, T> node;
             typedef Compare key_compare; //	The third template parameter (Compare)	defaults to: less<key_type>
             typedef T value_compare; //	Nested function class to compare elements	see value_comp
@@ -102,7 +130,7 @@ namespace ft
             typedef typename allocator_type::const_reference const_reference; //for the default allocator: const value_type&
             typedef typename allocator_type::pointer pointer;		//for the default allocator: value_type*
             typedef typename allocator_type::const_pointer const_pointer; //	allocator_type::const_pointer	for the default allocator: const value_type*
-            // iterator	a bidirectional iterator to value_type	convertible to const_iterator
+            typedef typename ft::MapIterator<Key, T> iterator; //	a bidirectional iterator to value_type	convertible to const_iterator
             // const_iterator	a bidirectional iterator to const value_type	
             // reverse_iterator	reverse_iterator<iterator>	
             // const_reverse_iterator	reverse_iterator<const_iterator>	
@@ -123,8 +151,11 @@ namespace ft
             Map &operator=(const Map &);
             ~Map();
 
+            // Iterators functions
+            iterator begin();					   //
+		    iterator end();	
             // Modifiers functions
-            // pair<iterator,bool> insert (const value_type& val);
+            const T & insert (const value_type& val);
 
             // Operations functions
             T &find (const key_type& k);
@@ -162,7 +193,7 @@ namespace ft
         dprintf(1, "%d\n", _nodes->getNode().getVal());
         dprintf(1, "%d\n", _nodes->getRight()->getNode().getVal());
         dprintf(1, "%d\n", _nodes->getRight()->getTop()->getNode().getVal());
-        print();
+        // print();
     }
 
     // Destructor
@@ -179,11 +210,33 @@ namespace ft
             return T();
     }
 
-    // template <typename Key, typename T, class Compare, class Alloc>
-    // pair<iterator,bool>  Map<Key, T, Compare, Alloc>::insert (const value_type& val)
-    // {
+    template <typename Key, typename T, class Compare, class Alloc>
+    const T& Map<Key, T, Compare, Alloc>::insert (const value_type& val)
+    {
+        // MAUVAISE SIGNATURE CHANGER QUAND theo aura fait les iterateurs uwu
+        // Idem pour le const en entree
+        iterator it = begin();
+        // std::cout << "debug de mon iterator : " << it->second << std::endl;
+        Node<Key, T> *tmp = _nodes;
+        while (!tmp->getIsEnd())
+        {
+            tmp = tmp->getRight();
+        }
 
-    // }
+        Node<Key, T> *new_node = reinterpret_cast<Node<Key, T>*>(_alloc.allocate(sizeof(value_type*)));
+        new_node->setValues(val.getKey(), val.getVal(), true);
+        new_node->setTop(*tmp);
+        tmp->setRight(*new_node);
+        print();
+        return val.getVal();
+
+    }
+    
+    template <typename Key, typename T, class Compare, class Alloc>
+    typename Map<Key, T, Compare, Alloc>::iterator Map<Key, T, Compare, Alloc>::begin()
+    {
+        return (MapIterator<Key, T>(&_nodes[0]));
+    }	
 }
 
 

@@ -448,8 +448,10 @@ v1.push_back(1);
 	std::map<std::string, int> map1;
 	ft::Map<std::string, int> map2;
 	map1.insert(map1.begin(), std::pair<std::string, int>("oui", 42));
+	map2.insert(ft::pair<std::string, int>("third", 42));
 	// std::map<std::string, int>::iterator it2020 = map1.begin();
-	std::cout << "value de map begin" << map1.at("oui") << std::endl;
+	// ft::Map<std::string, int>::iterator i11 = map2.begin();
+	std::cout << "value de map begin" << map1.begin()->second << std::endl;
 	// std::vector<int> vv1(50, 10);
 	// 	std::cout << vv1.capacity() << std::endl;
 	// // try
