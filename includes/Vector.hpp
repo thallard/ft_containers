@@ -35,13 +35,13 @@ namespace ft
 
 	public:
 		// Members functions
-		explicit Vector(const allocator_type &alloc = allocator_type()); //
+		explicit Vector(const allocator_type &alloc = allocator_type());													//
 		explicit Vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type()); //
 		template <class InputIterator>
 		Vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type()); //
-		Vector(const Vector &v); //
-		Vector &operator=(const Vector &v); //
-		~Vector(); //
+		Vector(const Vector &v);																		 //
+		Vector &operator=(const Vector &v);																 //
+		~Vector();																						 //
 
 		// Iterators
 		iterator begin();					   //
@@ -72,19 +72,25 @@ namespace ft
 		const_reference at(size_type n) const;		   //
 
 		// Modifiers
-		void assign(iterator first, iterator last); //
-		void assign(size_type n, const value_type &val); //
-		void push_back(const value_type &val); //
-		void pop_back();					   //
-		iterator insert(iterator position, const value_type &val); //
+		void assign(iterator first, iterator last);							//
+		void assign(size_type n, const value_type &val);					//
+		void push_back(const value_type &val);								//
+		void pop_back();													//
+		iterator insert(iterator position, const value_type &val);			//
 		void insert(iterator position, size_type n, const value_type &val); //
-		void insert(iterator position, iterator first, iterator last); //
-		iterator erase(iterator position); //
-		iterator erase(iterator first, iterator last); //
-		void swap(Vector &x); //
-		void clear();		  //
+		template <class InputIterator>
+		void insert(iterator position, InputIterator first, InputIterator last); //
+		iterator erase(iterator position);										 //
+		iterator erase(iterator first, iterator last);							 //
+		void swap(Vector &x);													 //
+		void clear();															 //
 
-		friend bool operator==(const Vector<T, Alloc> &lhs, const Vector<T, Alloc> &rhs);
+		bool operator==(const Vector<T, Alloc> &rhs);
+		bool operator!=(const Vector<T, Alloc> &rhs);
+		bool operator<(const Vector<T, Alloc> &rhs);
+		bool operator<=(const Vector<T, Alloc> &rhs);
+		bool operator>(const Vector<T, Alloc> &rhs);
+		bool operator>=(const Vector<T, Alloc> &rhs);
 		class OutOfRange : public std::exception
 		{
 			virtual const char *what() const throw();
@@ -124,10 +130,9 @@ namespace ft
 	Vector<T, Alloc>::Vector(const Vector &v) : _alloc(v._alloc)
 	{
 		if (*this == v)
-			return ;
-		insert(begin(), v.begin(), v.end());
+			return;
+		this->insert(begin(), v.begin(), v.end());
 	}
-
 
 	// Overload operator=
 	template <typename T, class Alloc>
@@ -135,7 +140,9 @@ namespace ft
 	{
 		if (*this == v)
 			return *this;
-		this(v);
+		_array = v._array;
+		_size = v._size;
+		_count = v._count;
 		return *this;
 	}
 
@@ -150,15 +157,15 @@ namespace ft
 	template <typename T, class Alloc>
 	void Vector<T, Alloc>::push_back(const value_type &val)
 	{
-		dprintf(1, "\e[91mval en entree de push back  et la size %d %lu\e[0m\n", val, _size);
+		// dprintf(1, "\e[91mval en entree de push back  et la size %d %lu\e[0m\n", val, _size);
 		if (!_size)
 		{
 			_size = 2;
 			_array = reinterpret_cast<T *>(_alloc.allocate(sizeof(T *) * _size));
-				dprintf(1, "debug size %lu et count %lu\n", _size, _count);
+			// dprintf(1, "debug size %lu et count %lu\n", _size, _count);
 			_array[_count] = val;
 			_count += 1;
-			dprintf(1, "debug size %lu et count %lu\n", _size, _count);
+			// dprintf(1, "debug size %lu et count %lu\n", _size, _count);
 		}
 		else if (_count + 1 > _size)
 		{
@@ -167,22 +174,22 @@ namespace ft
 			for (size_t i = 0; i < _count; i++)
 			{
 				save[i] = _array[i];
-				dprintf(1, "debug de save = %d\n", save[i]);
+				// dprintf(1, "debug de save = %d\n", save[i]);
 			}
 			_alloc.deallocate(_array, sizeof(T *) * _size);
 			_size = _size * _size;
-			dprintf(1, "debug size %lu et count %lu\n", _size, _count);
+			// dprintf(1, "debug size %lu et count %lu\n", _size, _count);
 			_array = reinterpret_cast<T *>(_alloc.allocate(sizeof(T *) * _size));
 			for (size_t i = 0; i < save_size; i++)
 			{
 				_array[i] = save[i];
-				dprintf(1, "content de array = %d\n", _array[i]);
+				// dprintf(1, "content de array = %d\n", _array[i]);
 			}
 			_array[_count++] = val;
 		}
 		else
 		{
-			dprintf(1, "\e[92mval en entree du dernier else de push back  et la size %d %lu\e[0m\n", val, _size);
+			// dprintf(1, "\e[92mval en entree du dernier else de push back  et la size %d %lu\e[0m\n", val, _size);
 			_array[_count++] = val;
 		}
 	}
@@ -193,7 +200,7 @@ namespace ft
 	{
 		if (_size <= 0)
 		{
-			dprintf(1, "ici\n");
+			// dprintf(1, "ici\n");
 			return;
 		}
 
@@ -202,7 +209,7 @@ namespace ft
 			save[i] = _array[i];
 		_alloc.deallocate(_array, sizeof(T *) * _size);
 		_size--;
-	
+
 		if (_count - 1 == 0 || !_count)
 			_count = 0;
 		else
@@ -294,7 +301,6 @@ namespace ft
 			push_back(val);
 			i++;
 		}
-			
 	}
 
 	// Assign range
@@ -310,7 +316,7 @@ namespace ft
 		// 	pop_back();
 		while (start != end)
 			push_back(*start++);
-						// start++;
+		// start++;
 		for (size_t i = 0; i < save; i++)
 			erase(begin());
 		// erase(begin());
@@ -325,11 +331,11 @@ namespace ft
 		// 	erase(begin());
 		// 	i--;
 		// }
-		
 	}
 	template <typename T, class Alloc>
 	typename Vector<T, Alloc>::iterator Vector<T, Alloc>::insert(iterator position, const value_type &val)
 	{
+
 		iterator tmp = position;
 		iterator tmp2 = begin();
 		T save[_size];
@@ -359,7 +365,7 @@ namespace ft
 	template <typename T, class Alloc>
 	void Vector<T, Alloc>::insert(iterator position, size_type n, const value_type &val)
 	{
-	iterator tmp = position;
+		iterator tmp = position;
 		iterator tmp2 = begin();
 		T save[_size];
 		size_t i = 0;
@@ -383,14 +389,37 @@ namespace ft
 			push_back(val);
 		for (size_t l = 0; l < i; l++)
 			push_back(save[l]);
-		
 	}
+
 	template <typename T, class Alloc>
-	void Vector<T, Alloc>::insert(iterator position, iterator first, iterator last)
+	template <class InputIterator>
+	void Vector<T, Alloc>::insert(iterator position, InputIterator first, InputIterator last)
 	{
+		if (std::is_integral<InputIterator>::value)
+		{
+			size_t i = 0;
+			T save[_size];
+			while (first[i] != last[i])
+				save[i] = first[i];
+			size_t pos = _size - i;
+			size_t idx = pos;
+			while (idx)
+			{
+				pop_back();
+				idx--;
+			}
+			size_t j = 0;
+			while (pos)
+			{
+				push_back(first[j++]);
+				pos--;
+			}
+			for (size_t l = 0; l < i; l++)
+				push_back(save[l]);
+		}
 		iterator tmp = position;
 		iterator tmp2 = begin();
-		iterator it = first;
+		InputIterator it = first;
 		T save[_size];
 		size_t i = 0;
 		while (tmp != end())
@@ -404,7 +433,7 @@ namespace ft
 			pos++;
 			tmp2++;
 		}
-		
+
 		while (idx)
 		{
 			pop_back();
@@ -414,7 +443,7 @@ namespace ft
 		{
 			push_back(*it++);
 		}
-		
+
 		for (size_t l = 0; l < i; l++)
 			push_back(save[l]);
 	}
@@ -426,7 +455,7 @@ namespace ft
 		T _tmp[_count];
 		iterator tmp = begin();
 		iterator save = tmp;
-		dprintf(1, "\e[35mCount : %lu\n", _count);
+		// dprintf(1, "\e[35mCount : %lu\n", _count);
 		size_t count;
 		if (!_count)
 			count = 0;
@@ -450,11 +479,11 @@ namespace ft
 			beg++;
 		}
 		for (size_t it = 0; it < count; it++)
-		{	
-			dprintf(1, "\e[92mdebug de la value de it = %lu et count = %lu\n", it, count);
+		{
+			// dprintf(1, "\e[92mdebug de la value de it = %lu et count = %lu\n", it, count);
 			push_back(_tmp[it]);
 		}
-			
+
 		return (save);
 	}
 
@@ -487,7 +516,6 @@ namespace ft
 		// }
 		// return (stop);
 		// iterator tmp = start;
-
 	}
 
 	// Overload operator []
@@ -504,6 +532,37 @@ namespace ft
 		if (n > _count || n < 0)
 			throw Vector::OutOfRange();
 		return (_array[n]);
+	}
+
+	template <typename T, class Alloc>
+	bool Vector<T, Alloc>::operator==(const Vector<T, Alloc> &rhs)
+	{
+		return (_size == rhs._size);
+	}
+	template <typename T, class Alloc>
+	bool Vector<T, Alloc>::operator!=(const Vector<T, Alloc> &rhs)
+	{
+		return (_size != rhs._size);
+	}
+	template <typename T, class Alloc>
+	bool Vector<T, Alloc>::operator<(const Vector<T, Alloc> &rhs)
+	{
+		return (_size < rhs._size);
+	}
+	template <typename T, class Alloc>
+	bool Vector<T, Alloc>::operator<=(const Vector<T, Alloc> &rhs)
+	{
+		return (_size <= rhs._size);
+	}
+	template <typename T, class Alloc>
+	bool Vector<T, Alloc>::operator>(const Vector<T, Alloc> &rhs)
+	{
+		return (_size > rhs._size);
+	}
+	template <typename T, class Alloc>
+	bool Vector<T, Alloc>::operator>=(const Vector<T, Alloc> &rhs)
+	{
+		return (_size <= rhs._size);
 	}
 
 	// At

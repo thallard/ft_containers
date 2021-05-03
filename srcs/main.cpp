@@ -22,7 +22,7 @@ bool mycomparison(double first, double second)
 int main()
 {
 
-	ft::List<int> A;
+/*	ft::List<int> A;
 	std::list<int> B;
 	ft::List<int> C;
 	std::list<int> D;
@@ -280,7 +280,7 @@ int main()
 	// 	std::cout << "\e[35mContent : " << *real_begin  << "\e[0m" <<std::endl;
 	// 	real_begin++;
 	// }
-	/*std::cout << "Our Remove" << std::endl;
+	std::cout << "Our Remove" << std::endl;
 	ft::List<int> lst3(5, 10);
 	lst3.push_front(-5);
 	lst3.push_front(-5);
@@ -300,7 +300,7 @@ int main()
 	{
 		std::cout << "\e[35mContent : " << *fake_begin  << "\e[0m" <<std::endl;
 		fake_begin++;
-	}*/
+	}
 	// std::cout << "Merge real" << std::endl;
 	// std::list<int> first, second;
 
@@ -443,15 +443,48 @@ v1.push_back(1);
 	{
 		std::cout << "\e[35mContent : " << *(it_a) << "\e[0m" << std::endl;
 		it_a++;
-	}
+	}*/
 
 	std::map<std::string, int> map1;
 	ft::Map<std::string, int> map2;
 	map1.insert(map1.begin(), std::pair<std::string, int>("oui", 42));
-	map2.insert(ft::pair<std::string, int>("third", 42));
+	ft::Map<std::string, int>::iterator it1 = map2.begin();
+	// it1++;
+	map2.insert(++it1, ft::pair<std::string, int>("third", 42));
 	// std::map<std::string, int>::iterator it2020 = map1.begin();
 	// ft::Map<std::string, int>::iterator i11 = map2.begin();
 	std::cout << "value de map begin" << map1.begin()->second << std::endl;
+	map2["four"];
+	ft::Map<std::string, int>::reverse_iterator test = map2.rbegin();
+	while (test != map2.rend())
+	{
+		std::cout << "\e[91mreverse: " << test->first << std::endl;
+		test++;
+	}
+		ft::Map<std::string, int>::iterator test9 = map2.begin();
+	while (test9 != map2.end())
+	{
+		std::cout << "\e[92mnormal: " << test9->first << std::endl;
+		test9++;
+	}
+
+	std::cout << std::endl << "\e[0mFind four: ";
+	ft::Map<std::string, int>::iterator test2 = map2.find("four");
+	std::cout << test2->first << std::endl;
+
+	std::cout << "Count: " << map2.count("four") << std::endl;
+	std::cout << "upper_bound: " << map2.upper_bound("second")->first << std::endl;
+	std::cout << "lower_bound: " << map2.lower_bound("four")->first << std::endl;
+
+	ft::Map<std::string, int> map3;
+	map3.insert(map2.begin(), map2.end());
+	test9 = map3.begin();
+	while (test9 != map3.end())
+	{
+		std::cout << "\e[92mnormal: " << test9->first << std::endl;
+		test9++;
+	}
+
 	// std::vector<int> vv1(50, 10);
 	// 	std::cout << vv1.capacity() << std::endl;
 	// // try
