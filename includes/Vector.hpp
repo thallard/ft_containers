@@ -97,7 +97,20 @@ namespace ft
 		{
 			virtual const char *what() const throw();
 		};
+
+
+			void print();
 	};
+	
+	template <typename T, class Alloc>
+	void Vector<T, Alloc>::print()
+	{
+		for (size_t i = 0; i < _size; i++)
+		{
+			std::cout << "\e[35mValue at :" << i << " = " << _array[i] << ".\e[0m" << std::endl;
+		}
+		std::cout << std::endl;
+	}
 
 	// Alloc and default constructor
 	template <typename T, class Alloc>
@@ -117,8 +130,9 @@ namespace ft
 
 	// Range constructor
 	template <typename T, class Alloc>
-	Vector<T, Alloc>::Vector(iterator first, iterator last, const allocator_type &alloc) : _alloc(alloc)
+	Vector<T, Alloc>::Vector(iterator first, iterator last, const allocator_type &alloc) :_size(0), _count(0), _alloc(alloc)
 	{
+		_array = reinterpret_cast<T *>(_alloc.allocate(sizeof(T *) * 2));
 		insert(begin(), first, last);
 	}
 
@@ -154,59 +168,77 @@ namespace ft
 	template <typename T, class Alloc>
 	void Vector<T, Alloc>::push_back(const value_type &val)
 	{
-		// dprintf(1, "\e[91mval en entree de push back  et la size %d %lu\e[0m\n", val, _size);
-		if (!_size)
-		{
-			_size = 2;
-			_array = reinterpret_cast<T *>(_alloc.allocate(sizeof(T *) * _size));
-			// dprintf(1, "debug size %lu et count %lu\n", _size, _count);
-			_array[_count] = val;
-			_count += 1;
-			// dprintf(1, "debug size %lu et count %lu\n", _size, _count);
-		}
-		else if (_count + 1 > _size)
-		{
-			T save[_count];
-			size_t save_size = _count;
-			for (size_t i = 0; i < _count; i++)
-			{
-				save[i] = _array[i];
-				// dprintf(1, "debug de save = %d\n", save[i]);
-			}
-			_alloc.deallocate(_array, sizeof(T *) * _size);
-			_size = _size * _size;
-			// dprintf(1, "debug size %lu et count %lu\n", _size, _count);
-			_array = reinterpret_cast<T *>(_alloc.allocate(sizeof(T *) * _size));
-			for (size_t i = 0; i < save_size; i++)
-			{
-				_array[i] = save[i];
-				// dprintf(1, "content de array = %d\n", _array[i]);
-			}
-			_array[_count++] = val;
-		}
-		else
-		{
-			// dprintf(1, "\e[92mval en entree du dernier else de push back  et la size %d %lu\e[0m\n", val, _size);
-			_array[_count++] = val;
-		}
+	
+		reserve(_count + 1);
+		_array[_count] = val;
+		_count++;
+		// _count++;
+		// dprintf(1, "\e[91mval en entree de push back  et la size %lu %lu et val %d\e[0m\n", _count, _size, val);
+		// if (!_size)
+		// {
+		// 	_size = 2;
+		// 	_count = 0;
+		// 	// _alloc.deallocate(_array, sizeof(T *) * _size);
+		// 	// _array = reinterpret_cast<T *>(_alloc.allocate(sizeof(T *) * _size));
+		// 	// dprintf(1, "debug size %lu et count %lu\n", _size, _count);
+		// 	_array[_count++] = val;
+		// // dprintf(1, "size vaut zero sale fdp\n");
+		// 	// dprintf(1, "debug size %lu et count %lu\n", _size, _count);
+		// }
+		// else if (_count + 1 > _size)
+		// {
+		// 	dprintf(1, "count + 1 sale fdp\n");
+		// 	// T save[_count];
+		// 	// size_t save_size = _count;
+		// 	// for (size_t i = 0; i < _count; i++)
+		// 	// {
+		// 	// 	save[i] = _array[i];
+		// 	// 	// dprintf(1, "debug de save = %d\n", save[i]);
+		// 	// }
+		// 	// _alloc.deallocate(_array, sizeof(T *) * _size);
+		// 	// _size = _size * _size;
+		// 	// // dprintf(1, "debug size %lu et count %lu\n", _size, _count);
+		// 	// _array = reinterpret_cast<T *>(_alloc.allocate(sizeof(T *) * _size));
+		// 	// size_t i = 0;
+		// 	// for (; i < save_size; i++)
+		// 	// {
+		// 	// 	_array[i] = save[i];
+		// 	// 	// dprintf(1, "content de array = %d\n", _array[i]);
+		// 	// }
+		// 	// _size = _size * _size;
+		// 	// resize(_size);
+		// 	// dprintf(1, "%lu et size %lu %d\n", _count, _size, _array[15]);
+		// 	_array[_count++] = val;
+		// 	// _count = _count + 1;
+		// 	//_count += 1;
+		// }
+		// else
+		// {
+		// 	dprintf(1, "else sale fdp\n");
+		// 	// dprintf(1, "\e[92mval en entree du dernier else de push back  et la size %d %lu\e[0m\n", val, _size);
+		// 	_array[_count++] = val;
+		// }
 	}
 
 	// Modifiers pop_back
 	template <typename T, class Alloc>
 	void Vector<T, Alloc>::pop_back()
 	{
-		if (_size <= 0)
+		if (_size <= 0 || _count <= 0)
 		{
 			// dprintf(1, "ici\n");
-			return;
+			return ;
 		}
 
 		T save[_size];
 		for (size_t i = 0; i < _size; i++)
 			save[i] = _array[i];
 		_alloc.deallocate(_array, sizeof(T *) * _size);
-		_size--;
-
+	
+		// _size--;
+		// if (_size <= 0)
+		// 	_size = 0;
+		
 		if (_count - 1 == 0 || !_count)
 			_count = 0;
 		else
@@ -234,10 +266,11 @@ namespace ft
 				_array[i] = save[i];
 			for (size_t i = save_size; i < _size; i++)
 				_array[i] = val;
+			_count = _size;
 		}
 		else
 		{
-			T save[_size];
+			T save[_size + n];
 			for (size_t i = 0; i < _size; i++)
 				save[i] = _array[i];
 			_alloc.deallocate(_array, sizeof(T *) * _size);
@@ -247,6 +280,7 @@ namespace ft
 				_array[i] = save[i];
 			_count = n;
 		}
+		// dprintf(1, "debgu de la size = %lu\n", _size);
 	}
 
 	// Modifiers clear
@@ -288,8 +322,6 @@ namespace ft
 	template <typename T, class Alloc>
 	void Vector<T, Alloc>::assign(size_type n, const value_type &val)
 	{
-		(void)n;
-		(void)val;
 		while (_size)
 			pop_back();
 		size_t i = 0;
@@ -304,8 +336,7 @@ namespace ft
 	template <typename T, class Alloc>
 	void Vector<T, Alloc>::assign(iterator first, iterator last)
 	{
-		(void)first;
-		(void)last;
+	
 		iterator start = first;
 		iterator end = last;
 		size_t save = _size;
@@ -332,15 +363,24 @@ namespace ft
 	template <typename T, class Alloc>
 	typename Vector<T, Alloc>::iterator Vector<T, Alloc>::insert(iterator position, const value_type &val)
 	{
-
+	
 		iterator tmp = position;
 		iterator tmp2 = begin();
-		T save[_size];
+		T save[_size + 100];
 		size_t i = 0;
+		if (tmp == end())
+		{
+			// dprintf(1, "\e[92mICI\n");
+			push_back(val);
+			// print();
+			// dprintf(1, "\e[92mICI\n");
+			return position;
+		}
 		while (tmp != end())
 		{
 			save[i++] = *tmp++;
 		}
+		
 		size_t pos = 0;
 		while (tmp2 != position)
 		{
@@ -356,6 +396,7 @@ namespace ft
 		push_back(val);
 		for (size_t l = 0; l < i; l++)
 			push_back(save[l]);
+		// print();
 		return position;
 	}
 
@@ -364,63 +405,88 @@ namespace ft
 	{
 		iterator tmp = position;
 		iterator tmp2 = begin();
-		T save[_size];
+		T save[_size + 10];
 		size_t i = 0;
+		
 		while (tmp != end())
 		{
-			save[i++] = *tmp++;
+			// dprintf(1, "\e[95mi: %lu -- tmp: %d\e[0m\n", i, *tmp);
+			save[i++] = *(tmp++);
+			// dprintf(1, "oui1\n");
 		}
+		// save[i++] = *(++tmp);
+		// print();
+
+		// dprintf(1, "\e[97mici jdois voir 10 ou je vais faire des dominos avec les macs %d\e[0m\n", *(--tmp));
+		// dprintf(1, "ici ce trouve un 200 : %d\n", save[i - 1]);
 		size_t pos = 0;
 		while (tmp2 != position)
 		{
 			pos++;
 			tmp2++;
+			// dprintf(1, "oui2\n");
 		}
-		size_t idx = i;
+			size_t idx = i;
+				// print();
 		while (idx)
 		{
 			pop_back();
 			idx--;
+			// dprintf(1, "oui3\n");
 		}
-		while (n--)
+		// std::cout << "debug du front" << front() << std::endl;
+		
+			// print();
+		while (n)
+		{	
+			
 			push_back(val);
+			// print();
+			n--;
+		}
+	
+		// dprintf(1, "\e[92m vaue de i + %lu %d", i, *begin());
 		for (size_t l = 0; l < i; l++)
+		{
 			push_back(save[l]);
+				// dprintf(1, "oui5\n");
+		}
+				// print();
 	}
 
 	template <typename T, class Alloc>
 	void Vector<T, Alloc>::insert(Vector<T, Alloc>::iterator position, Vector<T, Alloc>::iterator first, Vector<T, Alloc>::iterator last)
 	{
-		iterator tmp = position;
-		iterator tmp2 = begin();
-		iterator it = first;
-		T save[_size];
-		size_t i = 0;
-		while (tmp != end())
-		{
-			save[i++] = *tmp++;
-		}
+		size_t insertSize = static_cast<size_t>(last.address() - first.address());
 		size_t pos = 0;
-		size_t idx = i;
-		while (tmp2 != position)
-		{
+		iterator tmp = begin();
+	
+		while (tmp++ != position)
 			pos++;
-			tmp2++;
-		}
-
-		while (idx)
+		T _save_new[insertSize];
+		T _save_old[_count];
+		for (size_t j = 0; j < insertSize; j++)
+			_save_new[j] = *first++;
+		for (size_t l = 0; l < insertSize; l++)
+			_save_old[l] = _array[l];
+		reserve(_count + insertSize);
+		size_t i = 0;
+		while (i < insertSize)
 		{
-			pop_back();
-			idx--;
+			_array[pos + insertSize /* -1 ? */ + i - 1] = _save_old[i];
+			i++;
+			
+			
 		}
-		while (it != last)
+		i = 0;
+		// Copy at dest
+		while (i < insertSize)
 		{
-			push_back(*it);
-			it++;
+			_array[pos + i] = _save_new[i];
+			i++;
+		
 		}
-
-		for (size_t l = 0; l < i; l++)
-			push_back(save[l]);
+		// _count += insertSize;
 	}
 
 	// Erase position
@@ -458,7 +524,7 @@ namespace ft
 			// dprintf(1, "\e[92mdebug de la value de it = %lu et count = %lu\n", it, count);
 			push_back(_tmp[it]);
 		}
-
+	
 		return (save);
 	}
 

@@ -1,0 +1,55 @@
+iterator tmp = position;
+		iterator tmp2 = begin();
+		iterator it = first;
+		T save[_size + 1];
+		size_t i = 0;
+		// print();
+		// if (!_size)
+		// {
+		// 	while (first != last)
+		// 		push_back(*first++);
+		// 	return ;
+		
+		// }
+			// print();
+		while (tmp != end())
+		{
+			save[i++] = *tmp++;
+		}
+		size_t pos = 0;
+		// size_t idx = i;
+		while (tmp2 != position)
+		{
+			pos++;
+			tmp2++;
+		}
+			// print();
+		// while (idx)
+		// {
+		// 	pop_back();
+		// 	idx--;
+		// }
+			// print();
+			// print();
+		size_t count = 0;
+		iterator save_it = it;
+		while (it != last)
+		{
+			count++;
+			it++;
+		}
+		while (count--)
+		{
+
+			dprintf(1, "=====================SAVE IT: %d -- COUNT: %lu====================\n", *save_it, count);
+			push_back(*save_it);
+			save_it++;
+		}
+	// print();
+		for (size_t l = 0; l < i; l++)
+		{
+				dprintf(1, "ici2\n");
+			push_back(save[l]);
+			// print();
+		}
+			// print();

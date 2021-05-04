@@ -445,46 +445,120 @@ v1.push_back(1);
 		it_a++;
 	}*/
 
-	std::map<std::string, int> map1;
-	ft::Map<std::string, int> map2;
-	map1.insert(map1.begin(), std::pair<std::string, int>("oui", 42));
-	ft::Map<std::string, int>::iterator it1 = map2.begin();
-	// it1++;
-	map2.insert(++it1, ft::pair<std::string, int>("third", 42));
-	// std::map<std::string, int>::iterator it2020 = map1.begin();
-	// ft::Map<std::string, int>::iterator i11 = map2.begin();
-	std::cout << "value de map begin" << map1.begin()->second << std::endl;
-	map2["four"];
-	ft::Map<std::string, int>::reverse_iterator test = map2.rbegin();
-	while (test != map2.rend())
+	// std::map<std::string, int> map1;
+	// ft::Map<std::string, int> map2;
+	// map1.insert(map1.begin(), std::pair<std::string, int>("oui", 42));
+	// ft::Map<std::string, int>::iterator it1 = map2.begin();
+	// // it1++;
+	// map2.insert(++it1, ft::pair<std::string, int>("third", 42));
+	// // std::map<std::string, int>::iterator it2020 = map1.begin();
+	// // ft::Map<std::string, int>::iterator i11 = map2.begin();
+	// std::cout << "value de map begin" << map1.begin()->second << std::endl;
+	// map2["four"];
+	// ft::Map<std::string, int>::reverse_iterator test = map2.rbegin();
+	// while (test != map2.rend())
+	// {
+	// 	std::cout << "\e[91mreverse: " << test->first << std::endl;
+	// 	test++;
+	// }
+	// 	ft::Map<std::string, int>::iterator test9 = map2.begin();
+	// while (test9 != map2.end())
+	// {
+	// 	std::cout << "\e[92mnormal: " << test9->first << std::endl;
+	// 	test9++;
+	// }
+
+	// std::cout << std::endl << "\e[0mFind four: ";
+	// ft::Map<std::string, int>::iterator test2 = map2.find("four");
+	// std::cout << test2->first << std::endl;
+
+	// std::cout << "Count: " << map2.count("four") << std::endl;
+	// std::cout << "upper_bound: " << map2.upper_bound("second")->first << std::endl;
+	// std::cout << "lower_bound: " << map2.lower_bound("four")->first << std::endl;
+
+	// ft::Map<std::string, int> map3;
+	// map3.insert(map2.begin(), map2.end());
+	// test9 = map3.begin();
+	// while (test9 != map3.end())
+	// {
+	// 	std::cout << "\e[92mnormal: " << test9->first << std::endl;
+	// 	test9++;
+	// }
+
+	// 	ft::Vector<int> C(5, 255);
+	// std::vector<int> D(5, 255);
+	// ft::Vector<int> A(++(++C.begin()), --(--(--C.end())));
+	// std::vector<int> B(++(++D.begin()), --(--(--D.end())));
+
+	// std::cout << A.size() << B.size() << std::endl;
+	// 	std::cout << A.empty() << B.empty() << std::endl;
+	// 		std::cout << A.max_size() << B.max_size() << std::endl;
+	// 			std::cout << A.capacity() << B.capacity() << std::endl;
+		// std::cout << B.front() << std::endl;
+	
+	// B.push_back(10);
+
+/*	ft::List<int> LA;
+	std::list<int> LB;
+
+	LA.push_front(1);
+	LA.push_front(5);
+	LA.push_front(6);
+	LA.push_front(85);
+
+	LB.push_front(1);
+	LB.push_front(5);
+	LB.push_front(6);
+	LB.push_front(85);
+	ft::List<int> LAr (LA.begin(), LA.end());
+	std::list<int> LBr (LB.begin(), LB.end());
+
+	for (std::list<int>::iterator beg = LBr.begin(); beg != LBr.end(); beg++)
+		std::cout << "Real Range List: "<< *beg << std::endl;
+
+	for (ft::List<int>::iterator bega = LAr.begin(); bega != LAr.end(); bega++)
+		std::cout << "Our Range List: "<< *bega<< std::endl;
+
+std::cout << "Real size: " << LBr.size() << std::endl;
+std::cout << "Our size: " << LAr.size() << std::endl;*/
+	// ft::List<int> C(6, 100);
+	// std::list<int> D(6, 100);
+	// ft::List<int> A(C.begin(), C.end());
+	// std::list<int> B(D.begin(), D.end());
+
+	// std::cout << A.size() << " // " << B.size() << std::endl;
+	// std::cout << A.max_size() << " // " <<  B.max_size() << std::endl;
+	// std::cout << *A.begin() << " // " <<  *B.begin() << std::endl;
+	// std::cout << *A.end() << " // " <<  *B.end() << std::endl;
+	// std::cout << A.empty() << " // " <<  B.empty() << std::endl;
+	ft::Vector<int> A(5, 200);
+	std::vector<int> B(5, 200);
+	A.insert(A.end(), 10);
+	B.insert(B.end(), 10);
+	A.print();
+	A.insert(A.begin(), 5);
+	B.insert(B.begin(), 5);
+
+	A.insert(A.begin(), 10);
+	B.insert(B.begin(), 10);
+
+	A.insert(A.begin(), 2, 25);
+	B.insert(B.begin(), 2, 25);
+
+	A.print();
+	A.insert(++A.begin(), A.begin(), A.end());
+	B.insert( ++B.begin(), B.begin(), B.end());
+	 std::cout << A.front() << std::endl << B.front() << std::endl;
+	std::vector<int>::iterator it1 = B.begin();
+	std::vector<int>::iterator it2 = B.end();
+	while (it1 != it2)
 	{
-		std::cout << "\e[91mreverse: " << test->first << std::endl;
-		test++;
+		std::cout << "\e[91mContent de la real :" << *it1++ << ".\e[0m" << std::endl;
 	}
-		ft::Map<std::string, int>::iterator test9 = map2.begin();
-	while (test9 != map2.end())
-	{
-		std::cout << "\e[92mnormal: " << test9->first << std::endl;
-		test9++;
-	}
-
-	std::cout << std::endl << "\e[0mFind four: ";
-	ft::Map<std::string, int>::iterator test2 = map2.find("four");
-	std::cout << test2->first << std::endl;
-
-	std::cout << "Count: " << map2.count("four") << std::endl;
-	std::cout << "upper_bound: " << map2.upper_bound("second")->first << std::endl;
-	std::cout << "lower_bound: " << map2.lower_bound("four")->first << std::endl;
-
-	ft::Map<std::string, int> map3;
-	map3.insert(map2.begin(), map2.end());
-	test9 = map3.begin();
-	while (test9 != map3.end())
-	{
-		std::cout << "\e[92mnormal: " << test9->first << std::endl;
-		test9++;
-	}
-
+	A.print();
+	// A.push_back(10);
+	// A.push_back(10);
+	// A.insert(A.begin(), 5);
 	// std::vector<int> vv1(50, 10);
 	// 	std::cout << vv1.capacity() << std::endl;
 	// // try

@@ -355,6 +355,7 @@ namespace ft
 	template <class T, class Alloc>
 	List<T, Alloc>::List(iterator first, iterator last, const allocator_type &alloc) : _alloc(alloc)
 	{
+		_size = 0;
 		iterator copy = first;
 		iterator it = first;
 		while (copy != last)
