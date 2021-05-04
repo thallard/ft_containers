@@ -37,8 +37,7 @@ namespace ft
 		// Members functions
 		explicit Vector(const allocator_type &alloc = allocator_type());													//
 		explicit Vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type()); //
-		template <class InputIterator>
-		Vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type()); //
+		Vector(iterator first, iterator last, const allocator_type &alloc = allocator_type()); //
 		Vector(const Vector &v);																		 //
 		Vector &operator=(const Vector &v);																 //
 		~Vector();																						 //
@@ -78,8 +77,7 @@ namespace ft
 		void pop_back();													//
 		iterator insert(iterator position, const value_type &val);			//
 		void insert(iterator position, size_type n, const value_type &val); //
-		template <class InputIterator>
-		void insert(iterator position, InputIterator first, InputIterator last); //
+		void insert(iterator position, iterator first, iterator last); //
 		iterator erase(iterator position);										 //
 		iterator erase(iterator first, iterator last);							 //
 		void swap(Vector &x);													 //
@@ -119,8 +117,7 @@ namespace ft
 
 	// Range constructor
 	template <typename T, class Alloc>
-	template <class InputIterator>
-	Vector<T, Alloc>::Vector(InputIterator first, InputIterator last, const allocator_type &alloc) : _alloc(alloc)
+	Vector<T, Alloc>::Vector(iterator first, iterator last, const allocator_type &alloc) : _alloc(alloc)
 	{
 		insert(begin(), first, last);
 	}
@@ -392,34 +389,11 @@ namespace ft
 	}
 
 	template <typename T, class Alloc>
-	template <class InputIterator>
-	void Vector<T, Alloc>::insert(iterator position, InputIterator first, InputIterator last)
+	void Vector<T, Alloc>::insert(Vector<T, Alloc>::iterator position, Vector<T, Alloc>::iterator first, Vector<T, Alloc>::iterator last)
 	{
-		if (std::is_integral<InputIterator>::value)
-		{
-			size_t i = 0;
-			T save[_size];
-			while (first[i] != last[i])
-				save[i] = first[i];
-			size_t pos = _size - i;
-			size_t idx = pos;
-			while (idx)
-			{
-				pop_back();
-				idx--;
-			}
-			size_t j = 0;
-			while (pos)
-			{
-				push_back(first[j++]);
-				pos--;
-			}
-			for (size_t l = 0; l < i; l++)
-				push_back(save[l]);
-		}
 		iterator tmp = position;
 		iterator tmp2 = begin();
-		InputIterator it = first;
+		iterator it = first;
 		T save[_size];
 		size_t i = 0;
 		while (tmp != end())
@@ -441,7 +415,8 @@ namespace ft
 		}
 		while (it != last)
 		{
-			push_back(*it++);
+			push_back(*it);
+			it++;
 		}
 
 		for (size_t l = 0; l < i; l++)

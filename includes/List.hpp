@@ -255,8 +255,7 @@ namespace ft
 
 			explicit List(const allocator_type &alloc = allocator_type());
 			explicit List(size_type size, const T &val = value_type(), const allocator_type &alloc = allocator_type());
-			template <class InputIterator>
-			List(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type());
+			List(iterator first, iterator last, const allocator_type &alloc = allocator_type());
 			List(List &other);
 			~List();
 			List<T, Alloc> &operator=(List const &ref);
@@ -354,30 +353,10 @@ namespace ft
 
 	// Range constructor
 	template <class T, class Alloc>
-	template <class InputIterator>
-	List<T, Alloc>::List(InputIterator first, InputIterator last, const allocator_type &alloc) : _alloc(alloc)
+	List<T, Alloc>::List(iterator first, iterator last, const allocator_type &alloc) : _alloc(alloc)
 	{
-		if (std::is_integral<InputIterator>::value)
-		{
-			_size = static_cast<size_t>(first);
-			_nodes = reinterpret_cast<Element<T> *>(_alloc.allocate(sizeof(Element<T> *)));
-			Element<T> *tmp = _nodes;
-			for (size_t i = 0; i < _size; i++)
-			{
-				tmp->_next = reinterpret_cast<Element<T> *>(_alloc.allocate(sizeof(Element<T> *)));
-				tmp->_content = static_cast<T>(last);
-				tmp->_next->_prev = tmp;
-				tmp = tmp->_next;
-				_count++;
-			}
-			tmp->_content = static_cast<T>(_size);
-			tmp->_next = _nodes;
-			_nodes->_prev = tmp;
-			return;
-		}
-		_size = 0;
-		InputIterator copy = first;
-		InputIterator it = first;
+		iterator copy = first;
+		iterator it = first;
 		while (copy != last)
 		{
 			copy++;
@@ -389,7 +368,7 @@ namespace ft
 		while (it != last)
 		{
 			tmp->_next = reinterpret_cast<Element<T> *>(_alloc.allocate(sizeof(Element<T> *)));
-			save._content = static_cast<T>(it);
+			save._content = static_cast<T>(*it);
 			tmp->_content = save._content;
 			tmp->_next->_prev = tmp;
 			tmp = tmp->_next;
