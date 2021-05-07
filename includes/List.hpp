@@ -314,7 +314,16 @@ namespace ft
 			void splice(iterator pos, List &other, iterator it);
 			void splice(iterator pos, List &other, iterator first, iterator last);
 			
-			friend bool operator==( const List<T, Alloc>& lhs, const List<T, Alloc>& rhs );
+			bool operator==( const List<T, Alloc>& lhs);
+			bool operator!=( const List<T, Alloc>& lhs);
+			bool operator>=( const List<T, Alloc>& lhs);
+			bool operator<=( const List<T, Alloc>& lhs);
+			bool operator>( const List<T, Alloc>& lhs);
+			bool operator<( const List<T, Alloc>& lhs);
+		private:
+			bool is_sort();
+			template <class Compare>
+			bool is_sort(Compare p);
 	};
 
 	// Allocator and default constructor
@@ -322,7 +331,7 @@ namespace ft
 	List<T, Alloc>::List(const Alloc &alloc) : _alloc(alloc)
 	{
 		_nodes = reinterpret_cast<Element<T> *>(_alloc.allocate(sizeof(Element<T> *)));
-		_nodes->_content = static_cast<T>(0);
+		_nodes->_content = T();
 		_nodes->_prev = _nodes;
 		_nodes->_next = _nodes;
 		_size = 0;
@@ -346,7 +355,7 @@ namespace ft
 			tmp = tmp->_next;
 			_count++;
 		}
-		tmp->_content = static_cast<T>(size);
+		//tmp->_content = static_cast<T>(size);
 		tmp->_next = _nodes;
 		_nodes->_prev = tmp;
 	}
@@ -376,7 +385,7 @@ namespace ft
 			it++;
 			_count++;
 		}
-		tmp->_content = static_cast<T>(_size);
+		//tmp->_content = static_cast<T>(_size);
 		tmp->_next = _nodes;
 		_nodes->_prev = tmp;
 	}
@@ -450,9 +459,6 @@ namespace ft
 	template <class T, class Alloc>
 	typename List<T, Alloc>::reference List<T, Alloc>::back()
 	{
-		// Element<T> *tmp = _nodes->_next;
-		// for (size_t i = 1; i < _size; i++)
-		// 	tmp = tmp->_next;
 		return (_nodes->_prev->_prev->_content);
 	}
 
@@ -533,7 +539,7 @@ namespace ft
 		begin->_prev = _nodes;
 		_nodes->_prev = prev;
 		_nodes->_next = begin;
-		prev->_content = static_cast<T>(_size);
+		//prev->_content = static_cast<T>(_size);
 		_count++;
 	}
 
@@ -575,11 +581,6 @@ namespace ft
 	template <class T, class Alloc>
 	void List<T, Alloc>::resize(size_type count)
 	{
-		// if (count == 1)
-		// {
-		// 	_nodes->_prev->_prev->_content = static_cast<T>(count);
-		// 	return;
-		// }
 		if (_size < count)
 		{
 			Element<T> *tmp = _nodes;
@@ -594,7 +595,7 @@ namespace ft
 			}
 			tmp->_next = end;
 			end->_prev = tmp;
-			end->_content = static_cast<T>(count);
+			//end->_content = static_cast<T>(count);
 			_size = count;
 		}
 		else
@@ -615,7 +616,7 @@ namespace ft
 			_alloc.deallocate(reinterpret_cast<T *>(tmp), sizeof(Element<T> *));
 			last->_next = end;
 			end->_prev = last;
-			end->_content = static_cast<T>(count);
+			//end->_content = static_cast<T>(count);
 			_size = count;
 			_count = count;
 		}
@@ -637,7 +638,7 @@ namespace ft
 		_alloc.deallocate(reinterpret_cast<T *>(tmp), sizeof(Element<T> *));
 		_size--;
 		_count--;
-		_nodes->_prev->_content = static_cast<T>(_size);
+		//_nodes->_prev->_content = static_cast<T>(_size);
 		return start;
 	}
 
@@ -654,15 +655,19 @@ namespace ft
 			save = save->_next;
 		}
 		Element<T> *tmp = save->_next;
+		if (first == this->begin())
+			_nodes = save;
 		while (start != last && _size-- && _count--)
 		{
 			tmp = tmp->_next;
-			_alloc.deallocate(reinterpret_cast<T *>(tmp->_prev), sizeof(Element<T> *));
+			iterator check = tmp ->_prev;
+			if (check != this->end())
+				_alloc.deallocate(reinterpret_cast<T *>(tmp->_prev), sizeof(Element<T> *));
 			start++;
 		}
 		save->_next = tmp;
 		tmp->_prev = save;
-		_nodes->_prev->_content = static_cast<T>(_size);
+		//_nodes->_prev->_content = static_cast<T>(_size);
 		return start;
 	}
 
@@ -801,7 +806,7 @@ namespace ft
 		_nodes = end;
 		_nodes->_next = _nodes;
 		_nodes->_prev = _nodes;
-		_nodes->_content = static_cast<T>(0);
+		//_nodes->_content = static_cast<T>(0);
 		_count = 0;
 		_size = 0;
 	}
@@ -907,51 +912,55 @@ namespace ft
 	{
 		Element<T> *tmp = _nodes;
 		Element<T> *end = _nodes->_prev;
-
-		while (tmp != end)
+		while (!is_sort())
 		{
-			Element<T> *tn = tmp->_next;
-			Element<T> *begin = tmp;
-			while (begin != end)
+			while (tmp != end)
 			{
-				if (begin != tmp && begin->_content < tmp->_content)
+				Element<T> *tn = tmp->_next;
+				Element<T> *begin = tmp;
+				while (begin != end)
 				{
-					Element<T> *b_prev = begin->_prev;
-					Element<T> *b_next = begin->_next;
-					Element<T> *t_prev = tmp->_prev;
-					Element<T> *t_next = tmp->_next;
-
-					if (begin == tmp->_next)
+					if (begin != tmp && begin->_content < tmp->_content)
 					{
-						t_prev->_next = begin;
-						begin->_prev = t_prev;
-						b_next->_prev = tmp;
-						tmp->_next = b_next;
-						begin->_next = tmp;
-						tmp->_prev = begin;
+						Element<T> *b_prev = begin->_prev;
+						Element<T> *b_next = begin->_next;
+						Element<T> *t_prev = tmp->_prev;
+						Element<T> *t_next = tmp->_next;
+
+						if (begin == tmp->_next)
+						{
+							t_prev->_next = begin;
+							begin->_prev = t_prev;
+							b_next->_prev = tmp;
+							tmp->_next = b_next;
+							begin->_next = tmp;
+							tmp->_prev = begin;
+						}
+						else
+						{
+							t_prev->_next = begin;
+							t_next->_prev = begin;
+							begin->_prev = t_prev;
+							begin->_next = t_next;
+
+							b_prev->_next = tmp;
+							b_next->_prev = tmp;
+							tmp->_prev = b_prev;
+							tmp->_next = b_next;
+						}
+						if (tmp == _nodes)
+							_nodes = begin;
+						begin = begin->_next;
 					}
 					else
 					{
-						t_prev->_next = begin;
-						t_next->_prev = begin;
-						begin->_prev = t_prev;
-						begin->_next = t_next;
-
-						b_prev->_next = tmp;
-						b_next->_prev = tmp;
-						tmp->_prev = b_prev;
-						tmp->_next = b_next;
+						begin = begin->_next;
 					}
-					if (tmp == _nodes)
-						_nodes = begin;
-					begin = begin->_next;
 				}
-				else
-				{
-					begin = begin->_next;
-				}
+				tmp = tn;
 			}
-			tmp = tn;
+			tmp = _nodes;
+			end = _nodes->_prev;
 		}
 	}
 
@@ -962,50 +971,55 @@ namespace ft
 		Element<T> *tmp = _nodes;
 		Element<T> *end = _nodes->_prev;
 
-		while (tmp != end)
+		while (!is_sort(p))
 		{
-			Element<T> *tn = tmp->_next;
-			Element<T> *begin = tmp;
-			while (begin != end)
+			while (tmp != end)
 			{
-				if (begin != tmp && p(begin->_content, tmp->_content))
+				Element<T> *tn = tmp->_next;
+				Element<T> *begin = tmp;
+				while (begin != end)
 				{
-					Element<T> *b_prev = begin->_prev;
-					Element<T> *b_next = begin->_next;
-					Element<T> *t_prev = tmp->_prev;
-					Element<T> *t_next = tmp->_next;
-
-					if (begin == tmp->_next)
+					if (begin != tmp && p(begin->_content, tmp->_content))
 					{
-						t_prev->_next = begin;
-						begin->_prev = t_prev;
-						b_next->_prev = tmp;
-						tmp->_next = b_next;
-						begin->_next = tmp;
-						tmp->_prev = begin;
+						Element<T> *b_prev = begin->_prev;
+						Element<T> *b_next = begin->_next;
+						Element<T> *t_prev = tmp->_prev;
+						Element<T> *t_next = tmp->_next;
+
+						if (begin == tmp->_next)
+						{
+							t_prev->_next = begin;
+							begin->_prev = t_prev;
+							b_next->_prev = tmp;
+							tmp->_next = b_next;
+							begin->_next = tmp;
+							tmp->_prev = begin;
+						}
+						else
+						{
+							t_prev->_next = begin;
+							t_next->_prev = begin;
+							begin->_prev = t_prev;
+							begin->_next = t_next;
+
+							b_prev->_next = tmp;
+							b_next->_prev = tmp;
+							tmp->_prev = b_prev;
+							tmp->_next = b_next;
+						}
+						if (tmp == _nodes)
+							_nodes = begin;
+						begin = begin->_next;
 					}
 					else
 					{
-						t_prev->_next = begin;
-						t_next->_prev = begin;
-						begin->_prev = t_prev;
-						begin->_next = t_next;
-
-						b_prev->_next = tmp;
-						b_next->_prev = tmp;
-						tmp->_prev = b_prev;
-						tmp->_next = b_next;
+						begin = begin->_next;
 					}
-					if (tmp == _nodes)
-						_nodes = begin;
-					begin = begin->_next;
 				}
-				else
-				{
-					begin = begin->_next;
-				}
+				tmp = tn;
 			}
-			tmp = tn;
+			tmp = _nodes;
+			end = _nodes->_prev;
 		}
 	}
 
@@ -1013,6 +1027,7 @@ namespace ft
 	template <class Compare>
 	void List<T, Alloc>::merge(List &x, Compare p)
 	{
+		(void)p;
 		splice(end(), x);
 		sort(p);
 	}
@@ -1037,7 +1052,7 @@ namespace ft
 		tmp->_prev = save->_prev;
 		save->_prev = xend->_prev;
 
-		_nodes->_prev->_content = static_cast<T>(_size);
+		//_nodes->_prev->_content = static_cast<T>(_size);
 		xend->_content = 0;
 		x._nodes = xend;
 		xend->_prev = xend;
@@ -1064,7 +1079,7 @@ namespace ft
 		tmp->_prev->_next = tmp;
 		save->_prev = tmp;
 		tmp->_next = save;
-		_nodes->_prev->_content = static_cast<T>(_size);
+		//_nodes->_prev->_content = static_cast<T>(_size);
 
 		if (pos == begin())
 			_nodes = tmp;
@@ -1120,8 +1135,8 @@ namespace ft
 			_nodes = E;
 		if (first == other.begin())
 			other._nodes = end;
-		_nodes->_prev->_content = static_cast<T>(_size);
-		other._nodes->_prev->_content = static_cast<T>(other._size);
+		//_nodes->_prev->_content = static_cast<T>(_size);
+		//other._nodes->_prev->_content = static_cast<T>(other._size);
 	}
 
 	//Iterator_ls
@@ -1174,10 +1189,90 @@ namespace ft
 	}
 
 	template <class T, class Alloc>
-	bool operator==( const List<T, Alloc>& lhs, const List<T, Alloc>& rhs )
+	bool List<T, Alloc>::operator==(const List<T, Alloc>& lhs)
 	{
-		return (lhs._nodes == rhs._nodes);
+		if (_size != lhs._size)
+			return false;
+		iterator first = begin();
+		iterator second = lhs.begin();
+		while (first != end() && second != lhs.end())
+		{
+			if (*first != *second)
+				return false;
+			first++;
+			second++;
+		}
+		return true;
 	}
+	template <class T, class Alloc>
+	bool List<T, Alloc>::operator<(const List<T, Alloc>& lhs)
+	{
+		if (_size >= lhs._size)
+			return false;
+		iterator first = begin();
+		iterator second = lhs.begin();
+		while (first != end() && second != lhs.end())
+		{
+			if (*first >= *second)
+				return false;
+			first++;
+			second++;
+		}
+		return true;
+	}
+
+	template <class T, class Alloc>
+	bool List<T, Alloc>::operator!=(const List<T, Alloc>& lhs)
+	{
+		return !(*this == lhs);
+	}
+
+	template <class T, class Alloc>
+	bool List<T, Alloc>::operator>(const List<T, Alloc>& lhs)
+	{
+		return (lhs < *this);
+	}
+	template <class T, class Alloc>
+	bool List<T, Alloc>::operator>=(const List<T, Alloc>& lhs)
+	{
+		return !(*this < lhs);
+	}
+
+	template <class T, class Alloc>
+	bool List<T, Alloc>::operator<=(const List<T, Alloc>& lhs)
+	{
+		return !(lhs < *this);
+	}
+
+	template <class T, class Alloc>
+	bool List<T, Alloc>::is_sort()
+	{
+		iterator first = begin();
+		iterator sec = begin();
+		while (++sec != end())
+		{
+			if (*sec < *first)
+				return false;
+			first++;
+		}
+		return true;
+	}
+
+	template <class T, class Alloc>
+	template <class Compare>
+	bool List<T, Alloc>::is_sort(Compare p)
+	{
+		iterator first = begin();
+		iterator sec = begin();
+		while (++sec != end())
+		{
+			if (p(*sec, *first))
+				return false;
+			first++;
+		}
+		return true;
+	}
+
 
 }
 

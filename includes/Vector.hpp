@@ -37,10 +37,10 @@ namespace ft
 		// Members functions
 		explicit Vector(const allocator_type &alloc = allocator_type());													//
 		explicit Vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type()); //
-		Vector(iterator first, iterator last, const allocator_type &alloc = allocator_type()); //
-		Vector(const Vector &v);																		 //
-		Vector &operator=(const Vector &v);																 //
-		~Vector();																						 //
+		Vector(iterator first, iterator last, const allocator_type &alloc = allocator_type());								//
+		Vector(const Vector &v);																							//
+		Vector &operator=(const Vector &v);																					//
+		~Vector();																											//
 
 		// Iterators
 		iterator begin();					   //
@@ -77,11 +77,11 @@ namespace ft
 		void pop_back();													//
 		iterator insert(iterator position, const value_type &val);			//
 		void insert(iterator position, size_type n, const value_type &val); //
-		void insert(iterator position, iterator first, iterator last); //
-		iterator erase(iterator position);										 //
-		iterator erase(iterator first, iterator last);							 //
-		void swap(Vector &x);													 //
-		void clear();															 //
+		void insert(iterator position, iterator first, iterator last);		//
+		iterator erase(iterator position);									//
+		iterator erase(iterator first, iterator last);						//
+		void swap(Vector &x);												//
+		void clear();														//
 
 		bool operator==(const Vector<T, Alloc> &rhs);
 		bool operator!=(const Vector<T, Alloc> &rhs);
@@ -98,10 +98,9 @@ namespace ft
 			virtual const char *what() const throw();
 		};
 
-
-			void print();
+		void print();
 	};
-	
+
 	template <typename T, class Alloc>
 	void Vector<T, Alloc>::print()
 	{
@@ -130,7 +129,7 @@ namespace ft
 
 	// Range constructor
 	template <typename T, class Alloc>
-	Vector<T, Alloc>::Vector(iterator first, iterator last, const allocator_type &alloc) :_size(0), _count(0), _alloc(alloc)
+	Vector<T, Alloc>::Vector(iterator first, iterator last, const allocator_type &alloc) : _size(0), _count(0), _alloc(alloc)
 	{
 		_array = reinterpret_cast<T *>(_alloc.allocate(sizeof(T *) * 2));
 		insert(begin(), first, last);
@@ -168,56 +167,10 @@ namespace ft
 	template <typename T, class Alloc>
 	void Vector<T, Alloc>::push_back(const value_type &val)
 	{
-	
-		reserve(_count + 1);
-		_array[_count] = val;
+		if (_count >= _size)
+			reserve(_count + 1);
 		_count++;
-		// _count++;
-		// dprintf(1, "\e[91mval en entree de push back  et la size %lu %lu et val %d\e[0m\n", _count, _size, val);
-		// if (!_size)
-		// {
-		// 	_size = 2;
-		// 	_count = 0;
-		// 	// _alloc.deallocate(_array, sizeof(T *) * _size);
-		// 	// _array = reinterpret_cast<T *>(_alloc.allocate(sizeof(T *) * _size));
-		// 	// dprintf(1, "debug size %lu et count %lu\n", _size, _count);
-		// 	_array[_count++] = val;
-		// // dprintf(1, "size vaut zero sale fdp\n");
-		// 	// dprintf(1, "debug size %lu et count %lu\n", _size, _count);
-		// }
-		// else if (_count + 1 > _size)
-		// {
-		// 	dprintf(1, "count + 1 sale fdp\n");
-		// 	// T save[_count];
-		// 	// size_t save_size = _count;
-		// 	// for (size_t i = 0; i < _count; i++)
-		// 	// {
-		// 	// 	save[i] = _array[i];
-		// 	// 	// dprintf(1, "debug de save = %d\n", save[i]);
-		// 	// }
-		// 	// _alloc.deallocate(_array, sizeof(T *) * _size);
-		// 	// _size = _size * _size;
-		// 	// // dprintf(1, "debug size %lu et count %lu\n", _size, _count);
-		// 	// _array = reinterpret_cast<T *>(_alloc.allocate(sizeof(T *) * _size));
-		// 	// size_t i = 0;
-		// 	// for (; i < save_size; i++)
-		// 	// {
-		// 	// 	_array[i] = save[i];
-		// 	// 	// dprintf(1, "content de array = %d\n", _array[i]);
-		// 	// }
-		// 	// _size = _size * _size;
-		// 	// resize(_size);
-		// 	// dprintf(1, "%lu et size %lu %d\n", _count, _size, _array[15]);
-		// 	_array[_count++] = val;
-		// 	// _count = _count + 1;
-		// 	//_count += 1;
-		// }
-		// else
-		// {
-		// 	dprintf(1, "else sale fdp\n");
-		// 	// dprintf(1, "\e[92mval en entree du dernier else de push back  et la size %d %lu\e[0m\n", val, _size);
-		// 	_array[_count++] = val;
-		// }
+		_array[_count - 1] = val;
 	}
 
 	// Modifiers pop_back
@@ -225,20 +178,11 @@ namespace ft
 	void Vector<T, Alloc>::pop_back()
 	{
 		if (_size <= 0 || _count <= 0)
-		{
-			// dprintf(1, "ici\n");
-			return ;
-		}
-
+			return;
 		T save[_size];
 		for (size_t i = 0; i < _size; i++)
 			save[i] = _array[i];
 		_alloc.deallocate(_array, sizeof(T *) * _size);
-	
-		// _size--;
-		// if (_size <= 0)
-		// 	_size = 0;
-		
 		if (_count - 1 == 0 || !_count)
 			_count = 0;
 		else
@@ -253,20 +197,25 @@ namespace ft
 	template <typename T, class Alloc>
 	void Vector<T, Alloc>::resize(size_type n, value_type val)
 	{
-		if (_size > n)
+		if (_count > n)
+		{
+			while (_count != n)
+				pop_back();
+		}
+		else if (_size > n)
 		{
 			T save[_size];
 			size_t save_size = _size;
 			for (size_t i = 0; i < _size; i++)
 				save[i] = _array[i];
 			_alloc.deallocate(_array, sizeof(T *) * _size);
-			_size = _size * _size;
+			_size = n;
 			_array = reinterpret_cast<T *>(_alloc.allocate(sizeof(T *) * _size));
 			for (size_t i = 0; i < save_size; i++)
 				_array[i] = save[i];
 			for (size_t i = save_size; i < _size; i++)
 				_array[i] = val;
-			_count = _size;
+			_count = n;
 		}
 		else
 		{
@@ -274,13 +223,15 @@ namespace ft
 			for (size_t i = 0; i < _size; i++)
 				save[i] = _array[i];
 			_alloc.deallocate(_array, sizeof(T *) * _size);
+			size_t save_size = _size;
 			_size = n;
 			_array = reinterpret_cast<T *>(_alloc.allocate(sizeof(T *) * _size));
-			for (size_t i = 0; i < n; i++)
+			for (size_t i = 0; i < save_size; i++)
 				_array[i] = save[i];
+			for (size_t i = save_size; i < n; i++)
+				_array[i] = val;
 			_count = n;
 		}
-		// dprintf(1, "debgu de la size = %lu\n", _size);
 	}
 
 	// Modifiers clear
@@ -315,7 +266,9 @@ namespace ft
 			throw Vector::length_error();
 		if (n <= _size)
 			return;
+		size_t save = _count;
 		resize(n);
+		_count = save;
 	}
 
 	// Assign count
@@ -336,51 +289,33 @@ namespace ft
 	template <typename T, class Alloc>
 	void Vector<T, Alloc>::assign(iterator first, iterator last)
 	{
-	
+
 		iterator start = first;
 		iterator end = last;
 		size_t save = _size;
-		// while (_size)
-		// 	pop_back();
 		while (start != end)
 			push_back(*start++);
-		// start++;
 		for (size_t i = 0; i < save; i++)
 			erase(begin());
-		// erase(begin());
-		// erase(begin());
-		// erase(begin());
-		// erase(begin());
-		// erase(begin());
-		// iterator tmp = begin();
-		// while (i > 0)
-		// {
-		// 	dprintf(1, "debug de int = %lu\n", i);
-		// 	erase(begin());
-		// 	i--;
-		// }
 	}
 	template <typename T, class Alloc>
 	typename Vector<T, Alloc>::iterator Vector<T, Alloc>::insert(iterator position, const value_type &val)
 	{
-	
+
 		iterator tmp = position;
 		iterator tmp2 = begin();
 		T save[_size + 100];
 		size_t i = 0;
 		if (tmp == end())
 		{
-			// dprintf(1, "\e[92mICI\n");
 			push_back(val);
-			// print();
-			// dprintf(1, "\e[92mICI\n");
 			return position;
 		}
 		while (tmp != end())
 		{
 			save[i++] = *tmp++;
 		}
-		
+
 		size_t pos = 0;
 		while (tmp2 != position)
 		{
@@ -404,54 +339,19 @@ namespace ft
 	void Vector<T, Alloc>::insert(iterator position, size_type n, const value_type &val)
 	{
 		iterator tmp = position;
-		iterator tmp2 = begin();
 		T save[_size + 10];
 		size_t i = 0;
-		
-		while (tmp != end())
-		{
-			// dprintf(1, "\e[95mi: %lu -- tmp: %d\e[0m\n", i, *tmp);
-			save[i++] = *(tmp++);
-			// dprintf(1, "oui1\n");
-		}
-		// save[i++] = *(++tmp);
-		// print();
 
-		// dprintf(1, "\e[97mici jdois voir 10 ou je vais faire des dominos avec les macs %d\e[0m\n", *(--tmp));
-		// dprintf(1, "ici ce trouve un 200 : %d\n", save[i - 1]);
-		size_t pos = 0;
-		while (tmp2 != position)
-		{
-			pos++;
-			tmp2++;
-			// dprintf(1, "oui2\n");
-		}
-			size_t idx = i;
-				// print();
-		while (idx)
-		{
+		while (tmp != end())
+			save[i++] = *(tmp++);
+		size_t idx = i;
+		reserve(_count + n);
+		while (idx--)
 			pop_back();
-			idx--;
-			// dprintf(1, "oui3\n");
-		}
-		// std::cout << "debug du front" << front() << std::endl;
-		
-			// print();
-		while (n)
-		{	
-			
+		while (n--)
 			push_back(val);
-			// print();
-			n--;
-		}
-	
-		// dprintf(1, "\e[92m vaue de i + %lu %d", i, *begin());
 		for (size_t l = 0; l < i; l++)
-		{
 			push_back(save[l]);
-				// dprintf(1, "oui5\n");
-		}
-				// print();
 	}
 
 	template <typename T, class Alloc>
@@ -459,34 +359,32 @@ namespace ft
 	{
 		size_t insertSize = static_cast<size_t>(last.address() - first.address());
 		size_t pos = 0;
+		size_t _empty = empty();
 		iterator tmp = begin();
-	
+
 		while (tmp++ != position)
 			pos++;
+
 		T _save_new[insertSize];
 		T _save_old[_count];
+
 		for (size_t j = 0; j < insertSize; j++)
 			_save_new[j] = *first++;
-		for (size_t l = 0; l < insertSize; l++)
-			_save_old[l] = _array[l];
+		if (!_empty)
+			for (size_t l = 0; l < insertSize; l++)
+				_save_old[l] = _array[l];
 		reserve(_count + insertSize);
 		size_t i = 0;
-		while (i < insertSize)
-		{
-			_array[pos + insertSize /* -1 ? */ + i - 1] = _save_old[i];
-			i++;
-			
-			
-		}
-		i = 0;
-		// Copy at dest
-		while (i < insertSize)
+
+		if (!_empty)
+			for (; i < insertSize; i++)
+				_array[pos + insertSize + i] = _save_old[i];
+
+		for (i = 0; i < insertSize; i++)
 		{
 			_array[pos + i] = _save_new[i];
-			i++;
-		
 		}
-		// _count += insertSize;
+		_count += insertSize;
 	}
 
 	// Erase position
@@ -496,7 +394,6 @@ namespace ft
 		T _tmp[_count];
 		iterator tmp = begin();
 		iterator save = tmp;
-		// dprintf(1, "\e[35mCount : %lu\n", _count);
 		size_t count;
 		if (!_count)
 			count = 0;
@@ -511,20 +408,15 @@ namespace ft
 				save = tmp + 1;
 			tmp++;
 		}
-		// if (position != end())
-		// 	_tmp[++i] = *tmp;
 		iterator beg = begin();
 		while (beg != end() && _size > 0)
 		{
 			pop_back();
 			beg++;
 		}
-		for (size_t it = 0; it < count; it++)
-		{
-			// dprintf(1, "\e[92mdebug de la value de it = %lu et count = %lu\n", it, count);
+		for (size_t it = _count; it < count; it++)
 			push_back(_tmp[it]);
-		}
-	
+
 		return (save);
 	}
 
@@ -533,30 +425,10 @@ namespace ft
 	typename Vector<T, Alloc>::iterator Vector<T, Alloc>::erase(iterator start, iterator stop)
 	{
 		iterator tmp = start;
-		// size_t count = 0;
-		while (tmp != stop)
-		{
-			erase(tmp);
-			tmp++;
-		}
-		return (stop);
-		// while (tmp != stop)
-		// {
-		// 	count++;
-		// 	tmp++;
-		// }
-		// resize(_count - count);
-		// tmp = begin();
-		// while (tmp != end())
-		// {
-		// 	if (tmp == start)
-		// 		while (tmp != stop)
-		// 			tmp++;
-		// 	push_back(*tmp);
-		// 	tmp++;
-		// }
-		// return (stop);
-		// iterator tmp = start;
+		size_t count = static_cast<size_t>(stop.address() - start.address());
+		while (count-- > 0)
+			tmp = erase(tmp);
+		return tmp;
 	}
 
 	// Overload operator []
@@ -575,36 +447,7 @@ namespace ft
 		return (_array[n]);
 	}
 
-	template <typename T, class Alloc>
-	bool Vector<T, Alloc>::operator==(const Vector<T, Alloc> &rhs)
-	{
-		return (_size == rhs._size);
-	}
-	template <typename T, class Alloc>
-	bool Vector<T, Alloc>::operator!=(const Vector<T, Alloc> &rhs)
-	{
-		return (_size != rhs._size);
-	}
-	template <typename T, class Alloc>
-	bool Vector<T, Alloc>::operator<(const Vector<T, Alloc> &rhs)
-	{
-		return (_size < rhs._size);
-	}
-	template <typename T, class Alloc>
-	bool Vector<T, Alloc>::operator<=(const Vector<T, Alloc> &rhs)
-	{
-		return (_size <= rhs._size);
-	}
-	template <typename T, class Alloc>
-	bool Vector<T, Alloc>::operator>(const Vector<T, Alloc> &rhs)
-	{
-		return (_size > rhs._size);
-	}
-	template <typename T, class Alloc>
-	bool Vector<T, Alloc>::operator>=(const Vector<T, Alloc> &rhs)
-	{
-		return (_size <= rhs._size);
-	}
+	
 
 	// At
 	template <typename T, class Alloc>
@@ -639,13 +482,13 @@ namespace ft
 	template <typename T, class Alloc>
 	typename Vector<T, Alloc>::reference Vector<T, Alloc>::back()
 	{
-		return (_array[_count]);
+		return (_array[_count - 1]);
 	}
 
 	template <typename T, class Alloc>
 	typename Vector<T, Alloc>::const_reference Vector<T, Alloc>::back() const
 	{
-		return (_array[_count]);
+		return (_array[_count - 1]);
 	}
 
 	// Max_size
@@ -735,6 +578,62 @@ namespace ft
 	typename Vector<T, Alloc>::const_reverse_iterator Vector<T, Alloc>::rend() const
 	{
 		return Const_Reverse_Iterator<T>(&_array[-1]);
+	}
+
+	template <class T, class Alloc>
+	bool Vector<T, Alloc>::operator==(const Vector<T, Alloc> &lhs)
+	{
+		if (_size != lhs._size)
+			return false;
+		iterator first = begin();
+		iterator second = lhs.begin();
+		while (first != end() && second != lhs.end())
+		{
+			if (*first != *second)
+				return false;
+			first++;
+			second++;
+		}
+		return true;
+	}
+	template <class T, class Alloc>
+	bool Vector<T, Alloc>::operator<(const Vector<T, Alloc> &lhs)
+	{
+		if (_size >= lhs._size)
+			return false;
+		iterator first = begin();
+		iterator second = lhs.begin();
+		while (first != end() && second != lhs.end())
+		{
+			if (*first >= *second)
+				return false;
+			first++;
+			second++;
+		}
+		return true;
+	}
+
+	template <class T, class Alloc>
+	bool Vector<T, Alloc>::operator!=(const Vector<T, Alloc> &lhs)
+	{
+		return !(*this == lhs);
+	}
+
+	template <class T, class Alloc>
+	bool Vector<T, Alloc>::operator>(const Vector<T, Alloc> &lhs)
+	{
+		return (lhs < *this);
+	}
+	template <class T, class Alloc>
+	bool Vector<T, Alloc>::operator>=(const Vector<T, Alloc> &lhs)
+	{
+		return !(*this < lhs);
+	}
+
+	template <class T, class Alloc>
+	bool Vector<T, Alloc>::operator<=(const Vector<T, Alloc> &lhs)
+	{
+		return !(lhs < *this);
 	}
 }
 
